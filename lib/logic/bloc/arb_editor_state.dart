@@ -10,7 +10,7 @@ abstract class ArbEditorState extends Equatable {
 }
 
 class ArbEditorInitial extends ArbEditorState {
-  const ArbEditorInitial(ArbDocument document) : super(document);
+  ArbEditorInitial() : super(ArbDocument());
 }
 
 class ArbEditorDocumentLoadSuccess extends ArbEditorState {
