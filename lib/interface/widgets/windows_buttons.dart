@@ -53,7 +53,7 @@ class WindowTextButton extends WindowButton {
           iconBuilder: (buttonContext) => const SizedBox(),
           builder: (buttonContext, child) => Text(
             text,
-            style: TextStyle(
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
             ),
