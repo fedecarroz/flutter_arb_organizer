@@ -1,10 +1,22 @@
 part of 'arb_editor_bloc.dart';
 
 abstract class ArbEditorState extends Equatable {
-  const ArbEditorState();
+  final ArbDocument document;
+
+  const ArbEditorState(this.document);
+
+  @override
+  List<Object> get props => [document];
 }
 
 class ArbEditorInitial extends ArbEditorState {
-  @override
-  List<Object> get props => [];
+  const ArbEditorInitial(ArbDocument document) : super(document);
+}
+
+class ArbEditorDocumentLoadSuccess extends ArbEditorState {
+  const ArbEditorDocumentLoadSuccess(ArbDocument document) : super(document);
+}
+
+class ArbEditorDocumentUpdateSuccess extends ArbEditorState {
+  const ArbEditorDocumentUpdateSuccess(ArbDocument document) : super(document);
 }

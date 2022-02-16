@@ -2,7 +2,10 @@ class ArbDocument {
   final List<ArbLanguage> languages;
   final List<ArbEntriesGroups> groups;
 
-  ArbDocument({required this.languages, required this.groups});
+  ArbDocument({
+    this.languages = const <ArbLanguage>[],
+    this.groups = const <ArbEntriesGroups>[],
+  });
 
   ArbDocument.fromJson(Map<String, dynamic> json)
       : this(
@@ -13,6 +16,16 @@ class ArbDocument {
               .map((g) => ArbEntriesGroups.fromJson(g))
               .toList(),
         );
+
+  ArbDocument copyWith({
+    List<ArbLanguage>? languages,
+    List<ArbEntriesGroups>? groups,
+  }) {
+    return ArbDocument(
+      languages: languages ?? this.languages,
+      groups: groups ?? this.groups,
+    );
+  }
 }
 
 class ArbLanguage {
@@ -26,6 +39,16 @@ class ArbLanguage {
           lang: json['lang'],
           entries: Map<String, String>.from(json['entries'] ?? {}),
         );
+
+  ArbLanguage copyWith({
+    String? lang,
+    Map<String, String>? entries,
+  }) {
+    return ArbLanguage(
+      lang: lang ?? this.lang,
+      entries: entries ?? this.entries,
+    );
+  }
 }
 
 class ArbEntriesGroups {
@@ -39,4 +62,14 @@ class ArbEntriesGroups {
           name: json['name'] ?? '',
           keys: List<String>.from(json['keys'] ?? []),
         );
+
+  ArbEntriesGroups copyWith({
+    String? name,
+    List<String>? keys,
+  }) {
+    return ArbEntriesGroups(
+      name: name ?? this.name,
+      keys: keys ?? this.keys,
+    );
+  }
 }
