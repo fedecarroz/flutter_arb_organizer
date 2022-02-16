@@ -1,8 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
 import 'package:flutter_arb_organizer/helper/interface.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class App extends StatefulWidget {
   const App({Key? key}) : super(key: key);
@@ -28,35 +28,41 @@ class _AppState extends State<App> {
           decoration: const BoxDecoration(
             color: Colors.blue,
           ),
-          child: Column(
-            children: <Widget>[
-              Material(
-                color: Colors.transparent,
-                child: WindowTitleBarBox(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: MoveWindow(
-                          child: Row(
-                            children: const [
-                              SizedBox(width: 5),
-                              Icon(
-                                Icons.flutter_dash,
-                                color: Colors.white,
-                              ),
-                            ],
+          child: DropTarget(
+            onDragDone: (details) {
+              final files = details.files;
+              print(files);
+            },
+            child: Column(
+              children: <Widget>[
+                Material(
+                  color: Colors.transparent,
+                  child: WindowTitleBarBox(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: MoveWindow(
+                            child: Row(
+                              children: const [
+                                SizedBox(width: 5),
+                                Icon(
+                                  Icons.flutter_dash,
+                                  color: Colors.white,
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const WindowButtons(),
-                    ],
+                        const WindowButtons(),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              Expanded(
-                child: child!,
-              ),
-            ],
+                Expanded(
+                  child: child!,
+                ),
+              ],
+            ),
           ),
         );
       },
