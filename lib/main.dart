@@ -10,8 +10,8 @@ void main() {
   doWhenWindowReady(() {
     const initialSize = Size(600, 450);
     appWindow.minSize = initialSize;
-    appWindow.size = initialSize;
-    appWindow.alignment = Alignment.center;
+    //appWindow.size = initialSize;
+    //appWindow.alignment = Alignment.center;
     appWindow.title = 'Flutter ARB Organizer';
     appWindow.show();
   });

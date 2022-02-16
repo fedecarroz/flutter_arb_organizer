@@ -11,6 +11,10 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => const HomePage(),
         );
+      case projectEditorRoute:
+        return MaterialPageRoute(
+          builder: (context) => const ProjectEditorPage(),
+        );
     }
     
     return null;
