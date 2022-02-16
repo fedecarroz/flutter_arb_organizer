@@ -36,58 +36,21 @@ class _AppState extends State<App> {
             },
             child: Column(
               children: <Widget>[
-                Material(
-                  color: Colors.transparent,
-                  child: WindowTitleBarBox(
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: MoveWindow(
-                            child: Row(
-                              children: const [
-                                SizedBox(width: 5),
-                                Icon(
-                                  Icons.flutter_dash,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const WindowButtons(),
-                      ],
-                    ),
-                  ),
-                ),
+                const _TitleBar(),
                 Expanded(
-                  child: child!,
+                  child: ResponsiveWrapper.builder(
+                    child,
+                    breakpointsLandscape: <ResponsiveBreakpoint>[
+                      const ResponsiveBreakpoint.resize(
+                        1080,
+                        name: 'DESKTOP_LANDSCAPE',
+                        scaleFactor: 1.8,
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
-          ),
-        );
-      },
-      debugShowCheckedModeBanner: false,
-      initialRoute: '/',
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      onGenerateRoute: _appRouter.onGenerateRoute,
-      supportedLocales: AppLocalizations.supportedLocales,
-          child: Column(
-            children: <Widget>[
-              const _TitleBar(),
-              Expanded(
-                child: ResponsiveWrapper.builder(
-                  child,
-                  breakpointsLandscape: <ResponsiveBreakpoint>[
-                    const ResponsiveBreakpoint.resize(
-                      1080,
-                      name: 'DESKTOP_LANDSCAPE',
-                      scaleFactor: 1.8,
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         );
       },
