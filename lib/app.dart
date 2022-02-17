@@ -27,28 +27,17 @@ class _AppState extends State<App> {
       builder: (context, child) {
         return Container(
           decoration: const BoxDecoration(
-            color: Colors.blue,
+            color: Colors.transparent,
           ),
           child: DropTarget(
             onDragDone: (details) {
               final files = details.files;
               print(files);
             },
-            child: Column(
+            child: Stack(
               children: <Widget>[
+                child!,
                 const _TitleBar(),
-                Expanded(
-                  child: ResponsiveWrapper.builder(
-                    child,
-                    breakpointsLandscape: <ResponsiveBreakpoint>[
-                      const ResponsiveBreakpoint.resize(
-                        1080,
-                        name: 'DESKTOP_LANDSCAPE',
-                        scaleFactor: 1.8,
-                      ),
-                    ],
-                  ),
-                ),
               ],
             ),
           ),
@@ -76,7 +65,7 @@ class _TitleBar extends StatelessWidget {
               child: Row(
                 children: const <Widget>[
                   Padding(
-                    padding: EdgeInsets.only(left: 5, top: 5),
+                    padding: EdgeInsets.all(5),
                     child: Icon(
                       Icons.flutter_dash,
                       color: Colors.white,

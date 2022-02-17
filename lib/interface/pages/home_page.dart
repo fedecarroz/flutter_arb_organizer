@@ -27,7 +27,11 @@ class _HomePageState extends State<HomePage> {
                     goAhead = true;
                   }),
                 )
-              : const _ProjectDetails(),
+              : _ProjectDetails(
+                  onPressed: () => setState(() {
+                    goAhead = false;
+                  }),
+                ),
         ),
       ),
     );
@@ -63,9 +67,12 @@ class _MainCard extends StatelessWidget {
 }
 
 class _Welcome extends StatelessWidget {
-  _Welcome({Key? key, required this.onPressed}) : super(key: key);
-
   final void Function()? onPressed;
+
+  const _Welcome({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +124,12 @@ class _Welcome extends StatelessWidget {
 }
 
 class _ProjectDetails extends StatelessWidget {
-  const _ProjectDetails({Key? key}) : super(key: key);
+  final void Function()? onPressed;
+
+  const _ProjectDetails({
+    Key? key,
+    required this.onPressed,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -126,12 +138,28 @@ class _ProjectDetails extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Text(
-          'Dettagli progetto',
-          style: TextStyle(
-            color: Colors.blue[800],
-            fontSize: 20,
-          ),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                child: const Icon(
+                  Icons.arrow_back_rounded,
+                ),
+                onTap: onPressed,
+              ),
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'Dettagli progetto',
+              style: TextStyle(
+                color: Colors.blue[800],
+                fontSize: 20,
+              ),
+            ),
+          ],
         ),
         const SizedBox(height: 10),
         TextFormField(
@@ -183,7 +211,8 @@ class _ProjectDetails extends StatelessWidget {
         const SizedBox(height: 20),
         Center(
           child: ElevatedButton(
-            onPressed: () {},
+            onPressed: () =>
+                Navigator.of(context).pushNamed(projectEditorRoute),
             child: const Text('Avanti'),
             style: ElevatedButton.styleFrom(
               alignment: Alignment.center,
