@@ -15,7 +15,7 @@ class ArbDocument {
 
   ArbDocument.fromJson(Map<String, dynamic> json)
       : this(
-          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.it,
+          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.itIT,
           languages: List.from(json['languages'] ?? [])
               .map((l) => ArbLanguage.fromJson(l))
               .toList(),

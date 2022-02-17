@@ -9,42 +9,30 @@ class IORepository {
 
   IORepository() : _ioApi = WindowArbIOApi();
 
-  Future<ArbDocument> readFiles() async {
-    List<File> files = await _ioApi.readArbFiles();
-    ArbDocument? arbDoc;
+  Future<List<Object>> readFiles([Iterable<File>? importedFiles]) async {
+    Iterable<File> files = importedFiles ?? await _ioApi.readArbFiles();
 
-    if (files.any((f) => f.path.endsWith('.arb'))) {
-      final arbFiles = files.where((f) => f.path.endsWith('.arb')).toList();
-      arbDoc = convertArbFilesToArbDocument(arbFiles);
+    List<Object> filesParsed = [];
 
-      return arbDoc;
-    } else if (files.any((f) => f.path.endsWith('.arbdoc'))) {
-      final arbDocFile = files.firstWhere((f) => f.path.endsWith('.arbdoc'));
-      arbDoc = readArbDocument(arbDocFile);
-      return arbDoc;
-    } else if (files.isEmpty) {
-      throw Exception('Files not selected');
-    } else {
-      throw Exception('Files not Supported');
+    for (final file in files) {
+      if (file.path.endsWith('.${FilesSupported.arb}')) {
+        final arbLanguage = parseArbLanguageDocument(file);
+        filesParsed.add(arbLanguage);
+      } else if (file.path.endsWith('.${FilesSupported.arbdoc}')) {
+        final arbDoc = readArbDocument(file);
+        filesParsed.add(arbDoc);
+      }
     }
+
+    return filesParsed;
   }
 
-  ArbDocument convertArbFilesToArbDocument(List<File> arbFiles) {
-    final arbLanguages = <ArbLanguage>[];
+  ArbLanguage parseArbLanguageDocument(File arb) {
+    final filename = arb.uri.pathSegments.last;
+    final lang = filename.replaceAll(RegExp(r'(app_)|(.arb)'), '');
+    final arbJson = readArb(arb);
 
-    for (final arb in arbFiles) {
-      final filename = arb.uri.pathSegments.last;
-      final lang = filename.replaceAll(RegExp(r'(app_)|(.arb)'), '');
-      final arbJson = readArb(arb);
-
-      arbLanguages.add(ArbLanguage(lang: lang, entries: arbJson));
-    }
-
-    return ArbDocument(
-      languages: arbLanguages,
-      groups: [],
-      mainLanguage: LanguagesSupported.it,
-    );
+    return ArbLanguage(lang: lang, entries: arbJson);
   }
 
   ArbDocument readArbDocument(File arbDocumentFile) {

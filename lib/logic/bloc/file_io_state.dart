@@ -1,10 +1,10 @@
 part of 'file_io_bloc.dart';
 
-abstract class ArbIoState extends Equatable {
-  const ArbIoState();
+abstract class FileIOState extends Equatable {
+  const FileIOState();
 }
 
-class ArbIoInitial extends ArbIoState {
+class ArbIoInitial extends FileIOState {
   @override
   List<Object> get props => [];
 }

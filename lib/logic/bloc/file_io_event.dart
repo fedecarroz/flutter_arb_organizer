@@ -4,14 +4,18 @@ abstract class FileIOEvent extends Equatable {
   const FileIOEvent();
 }
 
-class FileIOLoaded extends FileIOEvent {
+class FileIOLoadStarted extends FileIOEvent {
   @override
   List<Object?> get props => [];
 }
 
-class FileIOLoadedFromDragAndDrop extends FileIOEvent {
+class FileIODropped extends FileIOEvent {
+  final List<XFile> files;
+
+  const FileIODropped(this.files);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [files];
 }
 
 class FileIOSaved extends FileIOEvent {
