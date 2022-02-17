@@ -59,9 +59,20 @@ class _TitleBar extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.all(5),
                     child: Icon(
-                      Icons.flutter_dash,
+                      Icons.text_fields,
                       color: Colors.white,
                     ),
+                  ),
+                  SizedBox(width: 5),
+                  Material(
+                    child: Text(
+                      'Flutter ARB Organizer',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                      ),
+                    ),
+                    color: Colors.transparent,
                   ),
                   Expanded(child: SizedBox()),
                 ],
