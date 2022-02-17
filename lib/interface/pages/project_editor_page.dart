@@ -1,15 +1,31 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 
 import 'package:flutter_arb_organizer/helper.dart';
+import 'package:flutter_arb_organizer/logic.dart';
 
-class ProjectEditorPage extends StatelessWidget {
+class ProjectEditorPage extends StatefulWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);
 
   @override
+  State<ProjectEditorPage> createState() => _ProjectEditorPageState();
+}
+
+class _ProjectEditorPageState extends State<ProjectEditorPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<EditorMenuBloc>().add(MainMenuClicked('Nome del progetto'));
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final appLocal = AppLocalizations.of(context)!;
+    
     return Scaffold(
       backgroundColor: Colors.blue,
       body: DropTarget(
@@ -25,13 +41,13 @@ class ProjectEditorPage extends StatelessWidget {
               child: _LeftSide(),
             ),
             Flexible(
-              flex: 3,
+              flex: 4,
               child: _RightSide(),
             ),
           ],
         ),
       ),
-      floatingActionButton: _FAB(),
+      floatingActionButton: const _FAB(),
     );
   }
 }
@@ -47,93 +63,66 @@ class _LeftSide extends StatelessWidget {
       padding: EdgeInsets.only(
         top: appWindow.titleBarHeight + 20,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Nome del progetto'.toString(),
-                    overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                    ),
+      child: Builder(
+        builder: (context) {
+          final _menuState = context.watch<EditorMenuBloc>().state;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(left: 10),
+                child: Text(
+                  _menuState.title,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 22,
                   ),
                 ),
-                const SizedBox(width: 15),
-                MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: GestureDetector(
-                    onTap: () {
-                      showDialog(
-                        context: context,
-                        builder: (_) => Center(
-                          child: Container(
-                            color: Colors.white,
-                            height: 100,
-                            width: 200,
-                            child: const Center(
-                              child: Text('Impostazioni(Ordina/salva/esporta)'),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      child: const Icon(
-                        Icons.more_horiz_rounded,
-                        color: Colors.white,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 20),
-          for (int index = 0; index < 3; index++) ...[
-            _LeftButton(
-              isSelected: index == 0 ? true : false,
-              label: 'Gruppo ${index + 1}',
-            ),
-          ],
-          const Expanded(child: SizedBox()),
-          const _LeftButton(
-            isSelected: false,
-            label: '+',
-            centerText: true,
-          ),
-        ],
+              ),
+              const SizedBox(height: 20),
+              Expanded(
+                child: _menuState is EditorMainMenuState
+                    ? const _MainMenu()
+                    : _menuState is EditorGroupMenuState
+                        ? const _GroupMenu()
+                        : const _LanguageMenu(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
 }
 
 class _LeftButton extends StatelessWidget {
+  final MaterialColor baseColor;
+  final bool centerText;
   final bool isSelected;
   final String label;
-  final bool centerText;
+  final void Function()? onTap;
+  final Color textColor;
 
   const _LeftButton({
     Key? key,
+    this.baseColor = Colors.blue,
+    this.centerText = false,
     required this.isSelected,
     required this.label,
-    this.centerText = false,
+    required this.onTap,
+    this.textColor = Colors.white,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: isSelected ? Colors.blue[900] : Colors.blue[700],
+      color: isSelected ? baseColor[900] : baseColor[700],
       child: InkWell(
-        onTap: () {},
-        hoverColor: Colors.blue[300],
+        highlightColor: baseColor[900],
+        hoverColor: baseColor[400],
+        splashColor: baseColor[600],
+        onTap: onTap,
         child: Container(
           height: 70,
           width: double.maxFinite,
@@ -144,14 +133,100 @@ class _LeftButton extends StatelessWidget {
             alignment: centerText ? Alignment.center : Alignment.centerLeft,
             child: Text(
               label,
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: textColor,
                 fontSize: 18,
               ),
             ),
           ),
         ),
       ),
+    );
+  }
+}
+
+class _MainMenu extends StatelessWidget {
+  const _MainMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _LeftButton(
+          isSelected: false,
+          label: 'Gruppi',
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(GroupMenuClicked('Gruppi')),
+        ),
+        _LeftButton(
+          isSelected: false,
+          label: 'Lingue',
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(LanguageMenuClicked('Lingue')),
+        ),
+        const Expanded(child: SizedBox()),
+        _LeftButton(
+          baseColor: Colors.deepOrange,
+          centerText: true,
+          isSelected: false,
+          label: 'Esporta',
+          onTap: () {},
+        ),
+      ],
+    );
+  }
+}
+
+class _GroupMenu extends StatelessWidget {
+  const _GroupMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _LeftButton(
+          centerText: true,
+          isSelected: false,
+          label: '+',
+          onTap: () {},
+        ),
+        const Expanded(child: SizedBox()),
+        _LeftButton(
+          centerText: true,
+          isSelected: false,
+          label: 'Indietro',
+          onTap: () => context
+              .read<EditorMenuBloc>()
+              .add(MainMenuClicked('Nome del progetto')),
+        ),
+      ],
+    );
+  }
+}
+
+class _LanguageMenu extends StatelessWidget {
+  const _LanguageMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        _LeftButton(
+          centerText: true,
+          isSelected: false,
+          label: '+',
+          onTap: () {},
+        ),
+        const Expanded(child: SizedBox()),
+        _LeftButton(
+          centerText: true,
+          isSelected: false,
+          label: 'Indietro',
+          onTap: () => context
+              .read<EditorMenuBloc>()
+              .add(MainMenuClicked('Nome del progetto')),
+        ),
+      ],
     );
   }
 }
@@ -209,9 +284,9 @@ class _RightSideState extends State<_RightSide> {
                 itemCount: 20,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  crossAxisSpacing: 50,
+                  crossAxisSpacing: 20,
                   mainAxisExtent: 180,
-                  mainAxisSpacing: 10,
+                  mainAxisSpacing: 20,
                 ),
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
