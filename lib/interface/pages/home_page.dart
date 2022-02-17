@@ -22,7 +22,7 @@ class _HomePageState extends State<HomePage> {
       body: Center(
         child: _MainCard(
           child: !goAhead
-              ? _Welcome(
+              ? _WelcomeSection(
                   onPressed: () => setState(() {
                     goAhead = true;
                   }),
@@ -66,10 +66,10 @@ class _MainCard extends StatelessWidget {
   }
 }
 
-class _Welcome extends StatelessWidget {
+class _WelcomeSection extends StatelessWidget {
   final void Function()? onPressed;
 
-  const _Welcome({
+  const _WelcomeSection({
     Key? key,
     required this.onPressed,
   }) : super(key: key);
@@ -84,39 +84,23 @@ class _Welcome extends StatelessWidget {
           'Flutter ARB Organizer',
           style: TextStyle(
             color: Colors.blue[800],
-            fontSize: 24,
+            fontSize: 26,
             fontWeight: FontWeight.bold,
           ),
         ),
         const SizedBox(height: 30),
-        ElevatedButton(
-          onPressed: onPressed,
-          child: const Text('Nuovo progetto'),
-          style: ElevatedButton.styleFrom(
-            alignment: Alignment.center,
-            elevation: 0,
-            minimumSize: const Size(160, 40),
-            primary: Colors.blue[800],
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            PrimaryButton(
+              onPressed: onPressed,
+              label: 'Nuovo progetto',
             ),
-          ),
-        ),
-        const SizedBox(height: 10),
-        ElevatedButton(
-          onPressed: () {},
-          child: const Text('Importa file .arb'),
-          style: ElevatedButton.styleFrom(
-            alignment: Alignment.center,
-            elevation: 0,
-            minimumSize: const Size(160, 40),
-            primary: Colors.blue[800],
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
+            PrimaryButton(
+              onPressed: () {},
+              label: 'Importa file.arb',
             ),
-          ),
+          ],
         ),
       ],
     );
@@ -179,17 +163,9 @@ class _ProjectDetails extends StatelessWidget {
                 ),
               ),
             ),
-            OutlinedButton(
+            SecondaryButton(
               onPressed: () {},
-              child: const Text('Cambia'),
-              style: OutlinedButton.styleFrom(
-                minimumSize: const Size(0, 40),
-                primary: Colors.blue[800],
-                textStyle: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
+              label: 'Cambia',
             ),
           ],
         ),
@@ -210,20 +186,10 @@ class _ProjectDetails extends StatelessWidget {
         ),
         const SizedBox(height: 20),
         Center(
-          child: ElevatedButton(
+          child: PrimaryButton(
             onPressed: () =>
                 Navigator.of(context).pushNamed(projectEditorRoute),
-            child: const Text('Avanti'),
-            style: ElevatedButton.styleFrom(
-              alignment: Alignment.center,
-              elevation: 0,
-              minimumSize: const Size(0, 40),
-              primary: Colors.blue[800],
-              textStyle: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
+            label: 'Avanti',
           ),
         ),
       ],

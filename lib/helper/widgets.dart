@@ -1,1 +1,1 @@
-export 'package:flutter_arb_organizer/interface/widgets/windows_buttons.dart';
+export 'package:flutter_arb_organizer/interface/widgets/buttons.dart';
