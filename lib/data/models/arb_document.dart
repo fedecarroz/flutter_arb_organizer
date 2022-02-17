@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_arb_organizer/helper/data.dart';
+import 'package:flutter_arb_organizer/data.dart';
 
 class ArbDocument {
   final List<ArbLanguage> languages;

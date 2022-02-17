@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_arb_organizer/helper/interface.dart';
+import 'package:flutter_arb_organizer/interface.dart';
 
 class AppRouter {
   Route? onGenerateRoute(RouteSettings routeSettings) {

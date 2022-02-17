@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter_arb_organizer/helper/data.dart';
+import 'package:flutter_arb_organizer/data.dart';
 
 class IORepository {
   final IOApiInterface _ioApi;
