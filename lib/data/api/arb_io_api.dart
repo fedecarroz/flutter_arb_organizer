@@ -1,7 +1,15 @@
 import 'dart:io';
+import 'dart:typed_data';
 
-abstract class ArbIOApi {
+abstract class IOApiInterface {
   void saveArbFile();
 
   Future<List<File>> readArbFiles();
+
+  Future<void> saveMultipleFiles(
+    Map<String, Uint8List> files, [
+    String? defaultFileName,
+  ]);
+
+  Future<void> saveFile(String filename, Uint8List content);
 }

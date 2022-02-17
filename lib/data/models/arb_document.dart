@@ -1,14 +1,21 @@
+import 'dart:convert';
+
+import 'package:flutter_arb_organizer/helper/data.dart';
+
 class ArbDocument {
   final List<ArbLanguage> languages;
   final List<ArbEntriesGroups> groups;
+  final String mainLanguage;
 
   ArbDocument({
+    required this.mainLanguage,
     this.languages = const <ArbLanguage>[],
     this.groups = const <ArbEntriesGroups>[],
   });
 
   ArbDocument.fromJson(Map<String, dynamic> json)
       : this(
+          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.it,
           languages: List.from(json['languages'] ?? [])
               .map((l) => ArbLanguage.fromJson(l))
               .toList(),
@@ -18,13 +25,36 @@ class ArbDocument {
         );
 
   ArbDocument copyWith({
+    String? mainLanguage,
     List<ArbLanguage>? languages,
     List<ArbEntriesGroups>? groups,
   }) {
     return ArbDocument(
+      mainLanguage: mainLanguage ?? this.mainLanguage,
       languages: languages ?? this.languages,
       groups: groups ?? this.groups,
     );
+  }
+
+  Map<String, String> toArbFiles() {
+    final arbFileMap = <String, String>{};
+
+    for (final arbLang in languages) {
+      final filename = "app_${arbLang.lang}.arb";
+      final fileContent = jsonEncode(arbLang.entries);
+
+      arbFileMap[filename] = fileContent;
+    }
+
+    return arbFileMap;
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'mainLanguage': mainLanguage,
+      'groups': groups.map((g) => g.toJson()).toList(),
+      'languages': languages.map((l) => l.toJson()).toList(),
+    };
   }
 }
 
@@ -49,6 +79,11 @@ class ArbLanguage {
       entries: entries ?? this.entries,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'lang': lang,
+        'entries': entries,
+      };
 }
 
 class ArbEntriesGroups {
@@ -72,4 +107,9 @@ class ArbEntriesGroups {
       keys: keys ?? this.keys,
     );
   }
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'keys': keys,
+      };
 }

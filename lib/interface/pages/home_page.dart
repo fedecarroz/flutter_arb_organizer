@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
+import 'package:flutter_arb_organizer/data/repo/arb_io_repository.dart';
 import 'package:flutter_arb_organizer/helper/interface.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -97,7 +97,10 @@ class _WelcomeSection extends StatelessWidget {
               label: 'Nuovo progetto',
             ),
             PrimaryButton(
-              onPressed: () {},
+              onPressed: () {
+                final ioRepo = IORepository();
+                ioRepo.readFiles().then(ioRepo.saveDocument);
+              },
               label: 'Importa file.arb',
             ),
           ],
