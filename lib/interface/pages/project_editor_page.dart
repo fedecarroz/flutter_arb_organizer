@@ -3,6 +3,8 @@ import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 
+import 'package:flutter_arb_organizer/helper.dart';
+
 class ProjectEditorPage extends StatelessWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);
 
@@ -29,23 +31,7 @@ class ProjectEditorPage extends StatelessWidget {
           ],
         ),
       ),
-      floatingActionButton: SizedBox(
-        height: 70,
-        width: 70,
-        child: FittedBox(
-          child: FloatingActionButton(
-            backgroundColor: Colors.blue[800],
-            focusColor: Colors.blue[900],
-            splashColor: Colors.blue[900],
-            hoverColor: Colors.blue[800],
-            onPressed: () {},
-            child: const Icon(
-              Icons.save,
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ),
+      floatingActionButton: _FAB(),
     );
   }
 }
@@ -303,37 +289,27 @@ class _RightSideState extends State<_RightSide> {
   }
 }
 
-class CustomScrollBehaviour extends MaterialScrollBehavior {
-  const CustomScrollBehaviour();
+class _FAB extends StatelessWidget {
+  const _FAB({Key? key}) : super(key: key);
 
   @override
-  Widget buildScrollbar(
-    BuildContext context,
-    Widget child,
-    ScrollableDetails details,
-  ) {
-    switch (getPlatform(context)) {
-      case TargetPlatform.linux:
-      case TargetPlatform.macOS:
-        return Scrollbar(
-          controller: details.controller,
-          isAlwaysShown: true,
-          child: child,
-        );
-      case TargetPlatform.windows:
-        return Scrollbar(
-          controller: details.controller,
-          isAlwaysShown: true,
-          radius: Radius.zero,
-          thickness: 16.0,
-          hoverThickness: 16.0,
-          showTrackOnHover: true,
-          child: child,
-        );
-      case TargetPlatform.android:
-      case TargetPlatform.fuchsia:
-      case TargetPlatform.iOS:
-        return child;
-    }
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 70,
+      width: 70,
+      child: FittedBox(
+        child: FloatingActionButton(
+          backgroundColor: Colors.blue[800],
+          focusColor: Colors.blue[900],
+          splashColor: Colors.blue[900],
+          hoverColor: Colors.blue[800],
+          onPressed: () {},
+          child: const Icon(
+            Icons.save,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
   }
 }
