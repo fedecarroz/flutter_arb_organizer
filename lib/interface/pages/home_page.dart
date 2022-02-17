@@ -1,5 +1,5 @@
+import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/data/repo/arb_io_repository.dart';
 import 'package:flutter_arb_organizer/helper/interface.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
@@ -19,19 +19,25 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       backgroundColor: Colors.blue,
-      body: Center(
-        child: _MainCard(
-          child: !goAhead
-              ? _WelcomeSection(
-                  onPressed: () => setState(() {
-                    goAhead = true;
-                  }),
-                )
-              : _ProjectDetails(
-                  onPressed: () => setState(() {
-                    goAhead = false;
-                  }),
-                ),
+      body: DropTarget(
+        onDragDone: (details) {
+          final files = details.files;
+          print(files);
+        },
+        child: Center(
+          child: _MainCard(
+            child: !goAhead
+                ? _WelcomeSection(
+                    onPressed: () => setState(() {
+                      goAhead = true;
+                    }),
+                  )
+                : _ProjectDetails(
+                    onPressed: () => setState(() {
+                      goAhead = false;
+                    }),
+                  ),
+          ),
         ),
       ),
     );
@@ -97,10 +103,7 @@ class _WelcomeSection extends StatelessWidget {
               label: 'Nuovo progetto',
             ),
             PrimaryButton(
-              onPressed: () {
-                final ioRepo = IORepository();
-                ioRepo.readFiles().then(ioRepo.saveDocument);
-              },
+              onPressed: () {},
               label: 'Importa file.arb',
             ),
           ],

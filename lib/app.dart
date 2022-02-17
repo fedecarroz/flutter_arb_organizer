@@ -1,5 +1,4 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/helper/interface.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -28,17 +27,11 @@ class _AppState extends State<App> {
           decoration: const BoxDecoration(
             color: Colors.transparent,
           ),
-          child: DropTarget(
-            onDragDone: (details) {
-              final files = details.files;
-              print(files);
-            },
-            child: Stack(
-              children: <Widget>[
-                child!,
-                const _TitleBar(),
-              ],
-            ),
+          child: Stack(
+            children: <Widget>[
+              child!,
+              const _TitleBar(),
+            ],
           ),
         );
       },
