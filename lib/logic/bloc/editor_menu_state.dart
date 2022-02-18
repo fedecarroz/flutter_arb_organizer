@@ -13,6 +13,10 @@ class EditorMainMenuState extends EditorMenuState {
   const EditorMainMenuState(String title) : super(title);
 }
 
+class EditorAllEntriesMenuState extends EditorMenuState {
+  const EditorAllEntriesMenuState(String title) : super(title);
+}
+
 class EditorGroupMenuState extends EditorMenuState {
   const EditorGroupMenuState(String title) : super(title);
 }

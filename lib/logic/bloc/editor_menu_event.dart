@@ -13,6 +13,10 @@ class MainMenuClicked extends EditorMenuEvent {
   const MainMenuClicked(String title) : super(title);
 }
 
+class AllEntriesMenuClicked extends EditorMenuEvent {
+  const AllEntriesMenuClicked(String title) : super(title);
+}
+
 class GroupMenuClicked extends EditorMenuEvent {
   const GroupMenuClicked(String title) : super(title);
 }
