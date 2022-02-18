@@ -3,33 +3,38 @@ import 'dart:convert';
 import 'package:flutter_arb_organizer/data.dart';
 
 class ArbDocument {
+  final String projectName;
   final List<ArbLanguage> languages;
-  final List<ArbEntriesGroups> groups;
   final String mainLanguage;
+  final List<ArbEntriesGroups> groups;
 
   ArbDocument({
-    required this.mainLanguage,
+    required this.projectName,
     this.languages = const <ArbLanguage>[],
+    required this.mainLanguage,
     this.groups = const <ArbEntriesGroups>[],
   });
 
   ArbDocument.fromJson(Map<String, dynamic> json)
       : this(
-          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.itIT,
+          projectName: json['projectName'] ?? 'new_project',
           languages: List.from(json['languages'] ?? [])
               .map((l) => ArbLanguage.fromJson(l))
               .toList(),
+          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.itIT,
           groups: List.from(json['groups'] ?? [])
               .map((g) => ArbEntriesGroups.fromJson(g))
               .toList(),
         );
 
   ArbDocument copyWith({
-    String? mainLanguage,
+    String? projectName,
     List<ArbLanguage>? languages,
+    String? mainLanguage,
     List<ArbEntriesGroups>? groups,
   }) {
     return ArbDocument(
+      projectName: projectName ?? this.projectName,
       mainLanguage: mainLanguage ?? this.mainLanguage,
       languages: languages ?? this.languages,
       groups: groups ?? this.groups,
@@ -51,9 +56,10 @@ class ArbDocument {
 
   Map<String, dynamic> toJson() {
     return {
+      'projectName': projectName,
+      'languages': languages.map((l) => l.toJson()).toList(),
       'mainLanguage': mainLanguage,
       'groups': groups.map((g) => g.toJson()).toList(),
-      'languages': languages.map((l) => l.toJson()).toList(),
     };
   }
 }
@@ -62,7 +68,10 @@ class ArbLanguage {
   final String lang;
   final Map<String, String> entries;
 
-  ArbLanguage({required this.lang, required this.entries});
+  ArbLanguage({
+    required this.lang,
+    required this.entries,
+  });
 
   ArbLanguage.fromJson(Map<String, dynamic> json)
       : this(
@@ -90,11 +99,14 @@ class ArbEntriesGroups {
   final String name;
   final List<String> keys;
 
-  ArbEntriesGroups({required this.name, required this.keys});
+  ArbEntriesGroups({
+    required this.name,
+    required this.keys,
+  });
 
   ArbEntriesGroups.fromJson(Map<String, dynamic> json)
       : this(
-          name: json['name'] ?? '',
+          name: json['name'] ?? 'group',
           keys: List<String>.from(json['keys'] ?? []),
         );
 

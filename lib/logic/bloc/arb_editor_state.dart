@@ -12,7 +12,10 @@ abstract class ArbEditorState extends Equatable {
 class ArbEditorInitial extends ArbEditorState {
   ArbEditorInitial()
       : super(
-          ArbDocument(mainLanguage: LanguagesSupported.itIT),
+          ArbDocument(
+            projectName: 'new_project',
+            mainLanguage: LanguagesSupported.itIT,
+          ),
         );
 }
 

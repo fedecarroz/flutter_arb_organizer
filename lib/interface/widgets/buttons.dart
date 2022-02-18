@@ -34,26 +34,28 @@ class WindowButtons extends StatelessWidget {
 class PrimaryButton extends StatelessWidget {
   final void Function()? onPressed;
   final String label;
+  final double fontSize;
 
   const PrimaryButton({
     Key? key,
     required this.onPressed,
     required this.label,
+    this.fontSize = 16,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(label),
+      child: Center(child: Text(label)),
       style: ElevatedButton.styleFrom(
         alignment: Alignment.center,
         elevation: 0,
         minimumSize: const Size(160, 40),
         primary: Colors.blue[800],
-        textStyle: const TextStyle(
+        textStyle: TextStyle(
           color: Colors.white,
-          fontSize: 16,
+          fontSize: fontSize,
         ),
       ),
     );
@@ -63,24 +65,26 @@ class PrimaryButton extends StatelessWidget {
 class SecondaryButton extends StatelessWidget {
   final void Function()? onPressed;
   final String label;
+  final double fontSize;
 
   const SecondaryButton({
     Key? key,
     required this.onPressed,
     required this.label,
+    this.fontSize = 16,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
-      child: Text(label),
+      child: Center(child: Text(label)),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(0, 40),
         primary: Colors.blue[800],
-        textStyle: const TextStyle(
+        textStyle: TextStyle(
           color: Colors.white,
-          fontSize: 16,
+          fontSize: fontSize,
         ),
       ),
     );
