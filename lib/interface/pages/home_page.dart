@@ -175,21 +175,78 @@ class _ProjectDetails extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 5),
-        MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () {},
-            child: const Text(
-              'Aggiungi lingua',
-              style: TextStyle(
-                color: Colors.blue,
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+        const SizedBox(height: 20),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Expanded(
+              child: Text(
+                'Lingue supportate:',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
               ),
             ),
+            SecondaryButton(
+              onPressed: () {},
+              label: '+',
+              fontSize: 22,
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+        Container(
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: Colors.black26,
+            ),
+            borderRadius: BorderRadius.circular(5),
+          ),
+          width: double.maxFinite,
+          padding: const EdgeInsets.all(15),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              for (var i = 0; i < 5; i++) ...[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    const Expanded(
+                      child: Text(
+                        'en_US',
+                        style: TextStyle(
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: (){},
+                        child: const Icon(Icons.delete_outline),
+                      ),
+                    ),
+                  ],
+                ),
+              ]
+            ],
           ),
         ),
+        // const SizedBox(height: 5),
+        // MouseRegion(
+        //   cursor: SystemMouseCursors.click,
+        //   child: GestureDetector(
+        //     onTap: () {},
+        //     child: const Text(
+        //       'Aggiungi lingua',
+        //       style: TextStyle(
+        //         color: Colors.blue,
+        //         fontSize: 16,
+        //         fontWeight: FontWeight.bold,
+        //       ),
+        //     ),
+        //   ),
+        // ),
         const SizedBox(height: 20),
         Center(
           child: PrimaryButton(
