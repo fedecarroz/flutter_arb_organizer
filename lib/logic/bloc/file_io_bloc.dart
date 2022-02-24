@@ -11,7 +11,7 @@ part 'file_io_state.dart';
 class FileIOBloc extends Bloc<FileIOEvent, FileIOState> {
   final _ioRepo = IORepository();
 
-  FileIOBloc() : super(ArbIoInitial()) {
+  FileIOBloc() : super(FileIOInitial()) {
     on<FileIOLoadStarted>(_manageFileLoad);
     on<FileIODropped>(_manageFileDrop);
   }
@@ -19,15 +19,23 @@ class FileIOBloc extends Bloc<FileIOEvent, FileIOState> {
   void _manageFileLoad(
     FileIOLoadStarted event,
     Emitter<FileIOState> emit,
-  ) {
-    final filesParsed = _ioRepo.readFiles();
+  ) async {
+    emit(FileIOLoadPenging());
+
+    final filesParsed = await _ioRepo.readFiles();
+
+    emit(FileIOLoadComplete(filesParsed));
   }
 
   void _manageFileDrop(
     FileIODropped event,
     Emitter<FileIOState> emit,
-  ) {
+  ) async {
+    emit(FileIOLoadPenging());
+
     final files = event.files.map((f) => File(f.path));
-    final filesParsed = _ioRepo.readFiles(files);
+    final filesParsed = await _ioRepo.readFiles(files);
+
+    emit(FileIOLoadComplete(filesParsed));
   }
 }

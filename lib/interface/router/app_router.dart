@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,7 +10,12 @@ class AppRouter {
     switch (routeSettings.name) {
       case homeRoute:
         return MaterialPageRoute(
-          builder: (context) => const HomePage(),
+          builder: (context) => MultiBlocProvider(providers: [
+            BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
+            BlocProvider<ArbCreateFormBloc>(
+              create: (_) => ArbCreateFormBloc(),
+            ),
+          ], child: const HomePage()),
         );
       case projectEditorRoute:
         return MaterialPageRoute(

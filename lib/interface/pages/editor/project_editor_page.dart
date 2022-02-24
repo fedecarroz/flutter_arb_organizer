@@ -1,9 +1,8 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProjectEditorPage extends StatefulWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);
@@ -16,7 +15,9 @@ class ProjectEditorPageState extends State<ProjectEditorPage> {
   @override
   void initState() {
     super.initState();
-    context.read<EditorMenuBloc>().add(MainMenuClicked('Nome del progetto'));
+    context
+        .read<EditorMenuBloc>()
+        .add(const MainMenuClicked('Nome del progetto'));
   }
 
   @override

@@ -39,7 +39,7 @@ class IORepository {
     final fileContent = utf8.decode(arbDocumentFile.readAsBytesSync());
     final json = jsonDecode(fileContent);
 
-    final arbDocJson = Map<String, String>.from(json);
+    final arbDocJson = Map<String, dynamic>.from(json);
 
     return ArbDocument.fromJson(arbDocJson);
   }

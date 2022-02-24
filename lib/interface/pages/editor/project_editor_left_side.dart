@@ -1,9 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
-
-import 'package:flutter_arb_organizer/logic.dart';
 
 class LeftSide extends StatelessWidget {
   const LeftSide({Key? key}) : super(key: key);
@@ -112,19 +111,19 @@ class _LeftMainMenu extends StatelessWidget {
           label: 'Etichette e info progetto',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(AllEntriesMenuClicked('Etichette e info progetto')),
+              .add(const AllEntriesMenuClicked('Etichette e info progetto')),
         ),
         _LeftButton(
           label: 'Gestione gruppi',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(GroupMenuClicked('Gestione gruppi')),
+              .add(const GroupMenuClicked('Gestione gruppi')),
         ),
         _LeftButton(
           label: 'Lingue supportate',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(LanguageMenuClicked('Lingue supportate')),
+              .add(const LanguageMenuClicked('Lingue supportate')),
         ),
         const Expanded(child: SizedBox()),
         _LeftButton(
@@ -170,7 +169,7 @@ class _LeftAllEntriesMenu extends StatelessWidget {
           label: 'Indietro',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(MainMenuClicked('Nome del progetto')),
+              .add(const MainMenuClicked('Nome del progetto')),
         ),
       ],
     );
@@ -198,7 +197,7 @@ class _LeftGroupMenu extends StatelessWidget {
           label: 'Indietro',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(MainMenuClicked('Nome del progetto')),
+              .add(const MainMenuClicked('Nome del progetto')),
         ),
       ],
     );
@@ -226,7 +225,7 @@ class _LeftLanguageMenu extends StatelessWidget {
           label: 'Indietro',
           onTap: () => context
               .read<EditorMenuBloc>()
-              .add(MainMenuClicked('Nome del progetto')),
+              .add(const MainMenuClicked('Nome del progetto')),
         ),
       ],
     );
