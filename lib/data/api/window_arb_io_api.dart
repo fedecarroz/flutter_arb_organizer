@@ -7,9 +7,14 @@ import 'package:flutter_arb_organizer/data.dart';
 
 class WindowArbIOApi extends IOApiInterface {
   @override
-  Future<List<File>> readArbFiles() async {
+  Future<List<File>> readFilesFromPicker({
+    List<String>? extensionsAllowed,
+  }) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions:
+          extensionsAllowed ?? [FilesSupported.arbdoc, FilesSupported.arb],
     );
 
     if (result != null) {

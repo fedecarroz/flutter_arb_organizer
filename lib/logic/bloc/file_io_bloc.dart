@@ -34,7 +34,7 @@ class FileIOBloc extends Bloc<FileIOEvent, FileIOState> {
     emit(FileIOLoadPenging());
 
     final files = event.files.map((f) => File(f.path));
-    final filesParsed = await _ioRepo.readFiles(files);
+    final filesParsed = await _ioRepo.readFiles(importedFiles: files);
 
     emit(FileIOLoadComplete(filesParsed));
   }

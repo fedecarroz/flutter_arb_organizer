@@ -15,6 +15,9 @@ class AppRouter {
             BlocProvider<ArbCreateFormBloc>(
               create: (_) => ArbCreateFormBloc(),
             ),
+            BlocProvider<ArbImportFormBloc>(
+              create: (_) => ArbImportFormBloc(),
+            ),
           ], child: const HomePage()),
         );
       case projectEditorRoute:

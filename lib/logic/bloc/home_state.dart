@@ -7,12 +7,14 @@ abstract class HomeState extends Equatable {
 
 class HomeInitial extends HomeState {}
 
-class HomeCreateFormInitComplete extends HomeState {}
+class HomeCreateFormInit extends HomeState {}
 
-class HomeLaunchDocumentComplete extends HomeState {
+class HomeLanguagesImport extends HomeState {}
+
+class HomeImportDocument extends HomeState {
   final ArbDocument arbDocument;
 
-  HomeLaunchDocumentComplete(this.arbDocument);
+  HomeImportDocument(this.arbDocument);
 
   @override
   List<Object?> get props => [arbDocument];

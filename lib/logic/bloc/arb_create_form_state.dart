@@ -77,4 +77,4 @@ class ArbCreateFormSaveFailure extends ArbCreateFormState {
 
 enum ArbCreateFormStatus { initial, updateSuccess, saveSuccess, saveFailure }
 
-enum ArbCreateFormErrorType { missingName, missingMainLang, lessThan2Langs }
+enum ArbCreateFormErrorType { missingName, missingMainLang, missingLangs }

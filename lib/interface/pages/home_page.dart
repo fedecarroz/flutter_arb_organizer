@@ -23,23 +23,13 @@ class _HomePageState extends State<HomePage> {
     return MultiBlocListener(
       listeners: [
         BlocListener<FileIOBloc, FileIOState>(
-          listenWhen: (p, n) => context.read<HomeBloc>().state is HomeInitial,
-          listener: (context, state) {
-            if (state is FileIOLoadComplete) {
-              final documentQueryResult = state.docs.whereType<ArbDocument>();
-              final languagesQueryResult = state.docs.whereType<ArbLanguage>();
-
-              if (documentQueryResult.isNotEmpty) {
-                context
-                    .read<HomeBloc>()
-                    .add(HomeDocumentLaunched(documentQueryResult.first));
-              } else if (languagesQueryResult.isNotEmpty) {}
-            }
-          },
+          listenWhen: (p, n) =>
+              context.read<HomeBloc>().state is! HomeImportDocument,
+          listener: _listenFileImportChanges,
         ),
         BlocListener<HomeBloc, HomeState>(
           listener: (context, state) {
-            if (state is HomeLaunchDocumentComplete) {
+            if (state is HomeImportDocument) {
               Navigator.pushNamed(
                 context,
                 projectEditorRoute,
@@ -58,17 +48,45 @@ class _HomePageState extends State<HomePage> {
           child: Center(
             child: BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
-                return _MainCard(
-                  child: state is HomeCreateFormInitComplete
-                      ? const _ProjectDetails()
-                      : const _WelcomeSection(),
-                );
+                if (state is HomeCreateFormInit) {
+                  return const _MainCard(child: _ProjectDetails());
+                } else if (state is HomeLanguagesImport) {
+                  return const _MainCard(child: _ArbImportCard());
+                } else {
+                  return const _MainCard(child: _WelcomeSection());
+                }
               },
             ),
           ),
         ),
       ),
     );
+  }
+
+  void _listenFileImportChanges(BuildContext context, FileIOState state) {
+    final homeState = context.read<HomeBloc>().state;
+    if (state is FileIOLoadComplete && homeState is HomeLanguagesImport) {
+      context.read<ArbImportFormBloc>().add(
+            ArbImportFormFileAdded(
+              state.docs.whereType<ArbLanguage>().toList(),
+            ),
+          );
+    } else if (state is FileIOLoadComplete) {
+      final documentQueryResult = state.docs.whereType<ArbDocument>();
+      final languagesQueryResult = state.docs.whereType<ArbLanguage>();
+
+      if (documentQueryResult.isNotEmpty) {
+        context
+            .read<HomeBloc>()
+            .add(HomeDocumentImported(documentQueryResult.first));
+      } else if (languagesQueryResult.isNotEmpty) {
+        context
+            .read<ArbImportFormBloc>()
+            .add(ArbImportFormFileAdded(languagesQueryResult.toList()));
+
+        context.read<HomeBloc>().add(HomeLanguagesImported());
+      }
+    }
   }
 }
 
@@ -97,6 +115,130 @@ class _MainCard extends StatelessWidget {
       padding: const EdgeInsets.all(30),
       child: child,
     );
+  }
+}
+
+class _ArbImportCard extends StatelessWidget {
+  const _ArbImportCard({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        _CardHeader(
+          title: 'Importa file Arb',
+          onBack: () => context
+            ..read<HomeBloc>().add(HomeResetted())
+            ..read<ArbImportFormBloc>().add(ArbImportFormResetted()),
+        ),
+        const SizedBox(height: 15),
+        TextFormField(
+          // initialValue: state.name,
+          decoration: const InputDecoration(
+            hintText: 'Nome del progetto',
+          ),
+          onChanged: (name) => context
+              .read<ArbCreateFormBloc>()
+              .add(ArbCreateFormNameUpdated(name)),
+        ),
+        const SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            Expanded(
+              child: BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
+                builder: (context, state) {
+                  return Text(
+                    'Lingua principale: ${state.mainLang}',
+                    style: const TextStyle(fontSize: 16),
+                  );
+                },
+              ),
+            ),
+            SecondaryButton(
+              onPressed: () => _changeMainLang(context),
+              label: 'Cambia',
+            ),
+          ],
+        ),
+        const SizedBox(height: 15),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const Expanded(
+              child: Text(
+                'Arb importati',
+                style: TextStyle(
+                  fontSize: 16,
+                ),
+              ),
+            ),
+            SecondaryButton(
+              onPressed: () => context
+                  .read<ArbImportFormBloc>()
+                  .add(ArbImportFormFilePickerRequested()),
+              label: '+',
+              fontSize: 22,
+            ),
+          ],
+        ),
+        BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
+          builder: (context, state) {
+            return SizedBox(
+              height: 200,
+              child: ListView.builder(
+                physics: const ClampingScrollPhysics(),
+                itemCount: state.languages.length,
+                itemBuilder: (context, index) {
+                  final langDoc = state.languages[index];
+                  return ListTile(
+                    title: Text('ARB ${langDoc.lang}'),
+                    subtitle:
+                        Text('Voci trovate: ${langDoc.entries.keys.length}'),
+                    trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.settings),
+                        ),
+                        IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.delete),
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          },
+        ),
+        const SizedBox(height: 20),
+        Center(
+          child: PrimaryButton(
+            onPressed: () =>
+                context.read<ArbCreateFormBloc>().add(ArbCreateFormSubmitted()),
+            label: 'Avanti',
+          ),
+        ),
+      ],
+    );
+  }
+
+  void _changeMainLang(BuildContext context) async {
+    final arbLangs = context.read<ArbImportFormBloc>().state.languages;
+    final languages = arbLangs.map((l) => l.lang).toList();
+
+    final newMainLang = await _showMainLanguageSelectDialog(context, languages);
+
+    if (newMainLang != null) {
+      context
+          .read<ArbImportFormBloc>()
+          .add(ArbImportFormMainLangUpdated(newMainLang));
+    }
   }
 }
 
@@ -197,8 +339,8 @@ class _ProjectDetails extends StatelessWidget {
                     message =
                         'Non è stata selezionata alcuna lingua principale';
                     break;
-                  case ArbCreateFormErrorType.lessThan2Langs:
-                    message = 'Bisogna selezionare almeno 2 lingue supportate';
+                  case ArbCreateFormErrorType.missingLangs:
+                    message = 'Non è stata selezionata alcuna lingua';
                     break;
                 }
 
@@ -268,15 +410,7 @@ class _ProjectDetails extends StatelessWidget {
                 ),
               ),
               SecondaryButton(
-                onPressed: () => _showMainLanguageSelectDialog(context).then(
-                  (mainLang) {
-                    if (mainLang != null) {
-                      context
-                          .read<ArbCreateFormBloc>()
-                          .add(ArbCreateFormMainLangUpdated(mainLang));
-                    }
-                  },
-                ),
+                onPressed: () => _changeMainLang(context),
                 label: 'Cambia',
               ),
             ],
@@ -371,215 +505,226 @@ class _ProjectDetails extends StatelessWidget {
     );
   }
 
-  Future<String?> _showMainLanguageSelectDialog(BuildContext context) async {
+  void _changeMainLang(BuildContext context) async {
     final languages = context.read<ArbCreateFormBloc>().state.languages;
-    return showDialog<String?>(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            width: 400,
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        child: const Icon(Icons.arrow_back_rounded),
-                        onTap: () => Navigator.pop(context),
-                      ),
+    final newMainLang = await _showMainLanguageSelectDialog(context, languages);
+
+    if (newMainLang != null) {
+      context
+          .read<ArbCreateFormBloc>()
+          .add(ArbCreateFormMainLangUpdated(newMainLang));
+    }
+  }
+}
+
+Future<String?> _showMainLanguageSelectDialog(
+  BuildContext context,
+  List<String> languages,
+) async {
+  return showDialog<String?>(
+    context: context,
+    builder: (context) {
+      return Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          width: 400,
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              _CardHeader(
+                title: 'Scegli la lingua principale',
+                onBack: () => Navigator.pop(context),
+              ),
+              if (languages.isEmpty)
+                SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: Text(
+                      'Nessuna lingua supportata presente',
+                      style: TextStyle(color: Colors.grey[600]),
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Scegli la lingua principale',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                if (languages.isEmpty)
-                  SizedBox(
-                    height: 100,
-                    child: Center(
+                  ),
+                )
+              else
+                const SizedBox(height: 15),
+              for (final lang in languages) ...[
+                Material(
+                  color: Colors.transparent,
+                  child: InkWell(
+                    onTap: () => Navigator.pop(context, lang),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
                       child: Text(
-                        'Nessuna lingua supportata presente',
+                        lang,
                         style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ),
-                  )
-                else
-                  const SizedBox(height: 15),
-                for (final lang in languages) ...[
-                  Material(
-                    color: Colors.transparent,
-                    child: InkWell(
-                      onTap: () => Navigator.pop(context, lang),
-                      child: Padding(
-                        padding: const EdgeInsets.all(15),
-                        child: Text(
-                          lang,
-                          style: TextStyle(color: Colors.grey[600]),
-                        ),
                       ),
                     ),
                   ),
-                ]
-              ],
-            ),
+                ),
+              ]
+            ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
+    },
+  );
+}
 
-  Future<List<String>?> _showLanguageSelectDialog(BuildContext context) async {
-    final languagesAlreadyAdded =
-        context.read<ArbCreateFormBloc>().state.languages;
+Future<List<String>?> _showLanguageSelectDialog(BuildContext context) async {
+  final languagesAlreadyAdded =
+      context.read<ArbCreateFormBloc>().state.languages;
 
-    final languages = LanguagesSupported.values
-        .where((l) => !languagesAlreadyAdded.contains(l))
-        .toList();
+  final languages = LanguagesSupported.values
+      .where((l) => !languagesAlreadyAdded.contains(l))
+      .toList();
 
-    final languagesSelected = <String>{};
+  final languagesSelected = <String>{};
 
-    return showDialog<List<String>?>(
-      context: context,
-      builder: (context) {
-        return Center(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(5),
-              boxShadow: const [
-                BoxShadow(
-                  color: Colors.black12,
-                  blurRadius: 10,
-                ),
-              ],
-            ),
-            width: 400,
-            padding: const EdgeInsets.all(30),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        child: const Icon(Icons.arrow_back_rounded),
-                        onTap: () => Navigator.pop(context),
-                      ),
+  return showDialog<List<String>?>(
+    context: context,
+    builder: (context) {
+      return Center(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(5),
+            boxShadow: const [
+              BoxShadow(
+                color: Colors.black12,
+                blurRadius: 10,
+              ),
+            ],
+          ),
+          width: 400,
+          padding: const EdgeInsets.all(30),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _CardHeader(
+                title: 'Scegli le lingue supportate',
+                onBack: () => Navigator.pop(context),
+              ),
+              if (languages.isEmpty)
+                SizedBox(
+                  height: 100,
+                  child: Center(
+                    child: Text(
+                      'Nessuna lingua presente',
+                      style: TextStyle(color: Colors.grey[600]),
                     ),
-                    const SizedBox(width: 10),
-                    Text(
-                      'Scegli le lingua supportate',
-                      style: TextStyle(
-                        color: Colors.blue[800],
-                        fontSize: 20,
-                      ),
-                    ),
-                  ],
-                ),
-                if (languages.isEmpty)
-                  SizedBox(
-                    height: 100,
-                    child: Center(
-                      child: Text(
-                        'Nessuna lingua presente',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ),
-                  )
-                else
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15),
-                    child: StatefulBuilder(
-                        builder: (context, StateSetter setState) {
-                      return ConstrainedBox(
-                        constraints: const BoxConstraints(maxHeight: 300),
-                        child: ListView.builder(
-                          physics: const ClampingScrollPhysics(),
-                          itemCount: languages.length,
-                          itemBuilder: (context, i) {
-                            final lang = languages[i];
+                  ),
+                )
+              else
+                Padding(
+                  padding: const EdgeInsets.only(top: 15),
+                  child:
+                      StatefulBuilder(builder: (context, StateSetter setState) {
+                    return ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 300),
+                      child: ListView.builder(
+                        physics: const ClampingScrollPhysics(),
+                        itemCount: languages.length,
+                        itemBuilder: (context, i) {
+                          final lang = languages[i];
 
-                            return Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    lang,
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                    ),
+                          return Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  lang,
+                                  style: const TextStyle(
+                                    fontSize: 16,
                                   ),
                                 ),
-                                Material(
-                                  child: Checkbox(
-                                    value: languagesSelected.contains(lang),
-                                    onChanged: (checked) => setState(() {
-                                      if (checked == true) {
-                                        languagesSelected.add(lang);
-                                      } else {
-                                        languagesSelected.remove(lang);
-                                      }
-                                    }),
-                                  ),
-                                )
-                              ],
-                            );
-                          },
-                        ),
-                      );
-                    }),
-                  ),
-                if (languages.isNotEmpty)
-                  Row(
-                    children: [
-                      Flexible(
-                        child: PrimaryButton(
-                          label: 'Salva',
-                          onPressed: () => Navigator.pop(
-                            context,
-                            List.of(languagesSelected),
-                          ),
+                              ),
+                              Material(
+                                child: Checkbox(
+                                  value: languagesSelected.contains(lang),
+                                  onChanged: (checked) => setState(() {
+                                    if (checked == true) {
+                                      languagesSelected.add(lang);
+                                    } else {
+                                      languagesSelected.remove(lang);
+                                    }
+                                  }),
+                                ),
+                              )
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  }),
+                ),
+              if (languages.isNotEmpty)
+                Row(
+                  children: [
+                    Flexible(
+                      child: PrimaryButton(
+                        label: 'Salva',
+                        onPressed: () => Navigator.pop(
+                          context,
+                          List.of(languagesSelected),
                         ),
                       ),
-                      const SizedBox(width: 15),
-                      Flexible(
-                        child: SecondaryButton(
-                          label: 'Chiudi',
-                          onPressed: () => Navigator.pop(context),
-                        ),
+                    ),
+                    const SizedBox(width: 15),
+                    Flexible(
+                      child: SecondaryButton(
+                        label: 'Chiudi',
+                        onPressed: () => Navigator.pop(context),
                       ),
-                    ],
-                  ),
-              ],
-            ),
+                    ),
+                  ],
+                ),
+            ],
           ),
-        );
-      },
+        ),
+      );
+    },
+  );
+}
+
+class _CardHeader extends StatelessWidget {
+  final String title;
+  final void Function()? onBack;
+
+  const _CardHeader({Key? key, this.title = '', this.onBack}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: <Widget>[
+        MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            child: const Icon(Icons.arrow_back_rounded),
+            onTap: onBack?.call,
+          ),
+        ),
+        const SizedBox(width: 10),
+        Text(
+          title,
+          style: TextStyle(
+            color: Colors.blue[800],
+            fontSize: 20,
+          ),
+        ),
+      ],
     );
   }
 }

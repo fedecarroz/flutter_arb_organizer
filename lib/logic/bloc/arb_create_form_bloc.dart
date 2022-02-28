@@ -60,7 +60,7 @@ class ArbCreateFormBloc extends Bloc<ArbCreateFormEvent, ArbCreateFormState> {
         if (state.name.isEmpty) {
           errorType = ArbCreateFormErrorType.missingName;
         } else if (state.languages.isEmpty) {
-          errorType = ArbCreateFormErrorType.lessThan2Langs;
+          errorType = ArbCreateFormErrorType.missingLangs;
         } else if (state.mainLang.isEmpty) {
           errorType = ArbCreateFormErrorType.missingMainLang;
         }

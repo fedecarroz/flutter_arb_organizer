@@ -9,8 +9,14 @@ class IORepository {
 
   IORepository() : _ioApi = WindowArbIOApi();
 
-  Future<List<Object>> readFiles([Iterable<File>? importedFiles]) async {
-    Iterable<File> files = importedFiles ?? await _ioApi.readArbFiles();
+  Future<List<Object>> readFiles({
+    Iterable<File>? importedFiles,
+    List<String>? extensionsAllowed,
+  }) async {
+    Iterable<File> files = importedFiles ??
+        await _ioApi.readFilesFromPicker(
+          extensionsAllowed: extensionsAllowed,
+        );
 
     List<Object> filesParsed = [];
 
@@ -46,8 +52,9 @@ class IORepository {
 
   Map<String, String> readArb(File file) {
     final fileContent = utf8.decode(file.readAsBytesSync());
-    final json = jsonDecode(fileContent);
+    final json = Map<String, dynamic>.from(jsonDecode(fileContent));
 
+    json.removeWhere((String key, _) => key.startsWith('@'));
     return Map<String, String>.from(json);
   }
 

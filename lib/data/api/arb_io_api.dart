@@ -4,7 +4,7 @@ import 'dart:typed_data';
 abstract class IOApiInterface {
   void saveArbFile();
 
-  Future<List<File>> readArbFiles();
+  Future<List<File>> readFilesFromPicker({List<String>? extensionsAllowed});
 
   Future<void> saveMultipleFiles(
     Map<String, Uint8List> files, [

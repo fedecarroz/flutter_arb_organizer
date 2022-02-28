@@ -1,21 +1,20 @@
 part of 'home_bloc.dart';
 
-abstract class HomeEvent extends Equatable {}
-
-class HomeResetted extends HomeEvent {
+abstract class HomeEvent extends Equatable {
   @override
   List<Object?> get props => [];
 }
 
-class HomeCreateInitialized extends HomeEvent {
-  @override
-  List<Object?> get props => [];
-}
+class HomeResetted extends HomeEvent {}
 
-class HomeDocumentLaunched extends HomeEvent {
+class HomeCreateInitialized extends HomeEvent {}
+
+class HomeLanguagesImported extends HomeEvent {}
+
+class HomeDocumentImported extends HomeEvent {
   final ArbDocument arbDocument;
 
-  HomeDocumentLaunched(this.arbDocument);
+  HomeDocumentImported(this.arbDocument);
 
   @override
   List<Object?> get props => [arbDocument];

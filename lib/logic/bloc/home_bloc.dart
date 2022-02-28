@@ -8,13 +8,10 @@ part 'home_state.dart';
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
   HomeBloc() : super(HomeInitial()) {
     on<HomeResetted>((event, emit) => emit(HomeInitial()));
-
-    on<HomeCreateInitialized>(
-      (event, emit) => emit(HomeCreateFormInitComplete()),
-    );
-
-    on<HomeDocumentLaunched>(
-      (event, emit) => emit(HomeLaunchDocumentComplete(event.arbDocument)),
+    on<HomeCreateInitialized>((event, emit) => emit(HomeCreateFormInit()));
+    on<HomeLanguagesImported>((event, emit) => emit(HomeLanguagesImport()));
+    on<HomeDocumentImported>(
+      (event, emit) => emit(HomeImportDocument(event.arbDocument)),
     );
   }
 }
