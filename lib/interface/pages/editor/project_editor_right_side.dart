@@ -192,7 +192,7 @@ class _RightGroupMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(); //TODO: implementare
   }
 }
 
@@ -201,8 +201,6 @@ class _RightLanguageMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        //TODO: implementare
-        );
+    return Container(); //TODO: implementare
   }
 }

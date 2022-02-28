@@ -23,7 +23,7 @@ class LeftSide extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 10),
                 child: Text(
-                  state.title,
+                  state.pageName,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
                     color: Colors.white,
@@ -109,21 +109,17 @@ class _LeftMainMenu extends StatelessWidget {
       children: [
         _LeftButton(
           label: 'Etichette e info progetto',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const AllEntriesMenuClicked('Etichette e info progetto')),
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(AllEntriesMenuClicked()),
         ),
         _LeftButton(
           label: 'Gestione gruppi',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const GroupMenuClicked('Gestione gruppi')),
+          onTap: () => context.read<EditorMenuBloc>().add(GroupMenuClicked()),
         ),
         _LeftButton(
           label: 'Lingue supportate',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const LanguageMenuClicked('Lingue supportate')),
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(LanguageMenuClicked()),
         ),
         const Expanded(child: SizedBox()),
         _LeftButton(
@@ -167,9 +163,7 @@ class _LeftAllEntriesMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Indietro',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const MainMenuClicked('Nome del progetto')),
+          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
         ),
       ],
     );
@@ -195,9 +189,7 @@ class _LeftGroupMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Indietro',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const MainMenuClicked('Nome del progetto')),
+          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
         ),
       ],
     );
@@ -223,9 +215,7 @@ class _LeftLanguageMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Indietro',
-          onTap: () => context
-              .read<EditorMenuBloc>()
-              .add(const MainMenuClicked('Nome del progetto')),
+          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
         ),
       ],
     );

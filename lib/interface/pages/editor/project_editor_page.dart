@@ -15,9 +15,7 @@ class ProjectEditorPageState extends State<ProjectEditorPage> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<EditorMenuBloc>()
-        .add(const MainMenuClicked('Nome del progetto'));
+    context.read<EditorMenuBloc>().add(MainMenuClicked());
   }
 
   @override
