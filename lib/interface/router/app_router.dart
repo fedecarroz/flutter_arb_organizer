@@ -11,22 +11,34 @@ class AppRouter {
     switch (routeSettings.name) {
       case homeRoute:
         return MaterialPageRoute(
-          builder: (context) => MultiBlocProvider(providers: [
-            BlocProvider<HomeBloc>(create: (_) => HomeBloc()),
-            BlocProvider<ArbCreateFormBloc>(
-              create: (_) => ArbCreateFormBloc(),
-            ),
-            BlocProvider<ArbImportFormBloc>(
-              create: (_) => ArbImportFormBloc(),
-            ),
-          ], child: const HomePage()),
+          builder: (context) => MultiBlocProvider(
+            providers: <BlocProvider>[
+              BlocProvider<HomeBloc>(
+                create: (context) => HomeBloc(),
+              ),
+              BlocProvider<ArbCreateFormBloc>(
+                create: (context) => ArbCreateFormBloc(),
+              ),
+              BlocProvider<ArbImportFormBloc>(
+                create: (context) => ArbImportFormBloc(),
+              ),
+            ],
+            child: const HomePage(),
+          ),
         );
       case projectEditorRoute:
         final arbDoc = args as ArbDocument;
 
         return MaterialPageRoute(
-          builder: (context) => BlocProvider(
-            create: (context) => EditorMenuBloc(arbDoc),
+          builder: (context) => MultiBlocProvider(
+            providers: <BlocProvider>[
+              BlocProvider<EditorMenuBloc>(
+                create: (context) => EditorMenuBloc(arbDoc.projectName),
+              ),
+              BlocProvider<ArbEditorBloc>(
+                create: (context) => ArbEditorBloc(arbDoc),
+              ),
+            ],
             child: const ProjectEditorPage(),
           ),
         );

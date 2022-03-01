@@ -1,129 +1,124 @@
 import 'dart:convert';
 
-import 'package:flutter_arb_organizer/data.dart';
+import 'package:equatable/equatable.dart';
 
-class ArbDocument {
-  final String version;
+class ArbDocument extends Equatable {
   final String projectName;
-  final List<ArbLanguage> languages;
+  final Map<String, ArbEntry> labels;
   final String mainLanguage;
-  final List<ArbEntriesGroups> groups;
+  final Set<String> languages;
+  final Map<String, String> groups;
+  final String version;
 
-  ArbDocument({
+  const ArbDocument({
     required this.projectName,
-    this.languages = const <ArbLanguage>[],
+    this.labels = const {},
     required this.mainLanguage,
-    this.groups = const <ArbEntriesGroups>[],
+    required this.languages,
+    this.groups = const {},
     this.version = '1.0.0',
   });
 
-  ArbDocument.fromJson(Map<String, dynamic> json)
-      : this(
-          projectName: json['projectName'] ?? 'new_project',
-          languages: List.from(json['languages'] ?? [])
-              .map((l) => ArbLanguage.fromJson(l))
-              .toList(),
-          mainLanguage: json['mainLanguage'] ?? LanguagesSupported.itIT,
-          groups: List.from(json['groups'] ?? [])
-              .map((g) => ArbEntriesGroups.fromJson(g))
-              .toList(),
-        );
-
   ArbDocument copyWith({
     String? projectName,
-    List<ArbLanguage>? languages,
+    Map<String, ArbEntry>? labels,
     String? mainLanguage,
-    List<ArbEntriesGroups>? groups,
+    Set<String>? languages,
+    Map<String, String>? groups,
+    String? version,
   }) {
     return ArbDocument(
       projectName: projectName ?? this.projectName,
+      labels: labels ?? this.labels,
       mainLanguage: mainLanguage ?? this.mainLanguage,
       languages: languages ?? this.languages,
       groups: groups ?? this.groups,
+      version: version ?? this.version,
     );
   }
 
-  Map<String, String> toArbFiles() {
-    final arbFileMap = <String, String>{};
-
-    for (final arbLang in languages) {
-      final filename = "app_${arbLang.lang}.arb";
-      final fileContent = jsonEncode(arbLang.entries);
-
-      arbFileMap[filename] = fileContent;
-    }
-
-    return arbFileMap;
-  }
-
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'projectName': projectName,
-      'languages': languages.map((l) => l.toJson()).toList(),
+      'labels': labels,
       'mainLanguage': mainLanguage,
-      'groups': groups.map((g) => g.toJson()).toList(),
+      'languages': languages.toList(),
+      'groups': groups,
+      'version': version,
     };
   }
-}
 
-class ArbLanguage {
-  final String lang;
-  final Map<String, String> entries;
-
-  ArbLanguage({
-    required this.lang,
-    required this.entries,
-  });
-
-  ArbLanguage.fromJson(Map<String, dynamic> json)
-      : this(
-          lang: json['lang'],
-          entries: Map<String, String>.from(json['entries'] ?? {}),
-        );
-
-  ArbLanguage copyWith({
-    String? lang,
-    Map<String, String>? entries,
-  }) {
-    return ArbLanguage(
-      lang: lang ?? this.lang,
-      entries: entries ?? this.entries,
+  factory ArbDocument.fromMap(Map<String, dynamic> map) {
+    return ArbDocument(
+      projectName: map['projectName'] ?? '',
+      labels: Map<String, ArbEntry>.from(map['labels']),
+      mainLanguage: map['mainLanguage'] ?? '',
+      languages: Set<String>.from(map['languages']),
+      groups: Map<String, String>.from(map['groups']),
+      version: map['version'] ?? '',
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'lang': lang,
-        'entries': entries,
-      };
+  String toJson() => json.encode(toMap());
+
+  factory ArbDocument.fromJson(String source) =>
+      ArbDocument.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [
+        projectName,
+        labels,
+        mainLanguage,
+        languages,
+        groups,
+        version,
+      ];
 }
 
-class ArbEntriesGroups {
-  final String name;
-  final List<String> keys;
+class ArbEntry extends Equatable {
+  final String key;
+  final Map<String, String> localizedValues;
+  final String groupId;
 
-  ArbEntriesGroups({
-    required this.name,
-    required this.keys,
+  const ArbEntry({
+    required this.key,
+    required this.localizedValues,
+    required this.groupId,
   });
 
-  ArbEntriesGroups.fromJson(Map<String, dynamic> json)
-      : this(
-          name: json['name'] ?? 'group',
-          keys: List<String>.from(json['keys'] ?? []),
-        );
-
-  ArbEntriesGroups copyWith({
-    String? name,
-    List<String>? keys,
+  ArbEntry copyWith({
+    String? key,
+    Map<String, String>? localizedValues,
+    String? groupId,
   }) {
-    return ArbEntriesGroups(
-      name: name ?? this.name,
-      keys: keys ?? this.keys,
+    return ArbEntry(
+      key: key ?? this.key,
+      localizedValues: localizedValues ?? this.localizedValues,
+      groupId: groupId ?? this.groupId,
     );
   }
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'keys': keys,
-      };
+  Map<String, dynamic> toMap() {
+    return {
+      'key': key,
+      'localizedValues': localizedValues,
+      'groupId': groupId,
+    };
+  }
+
+  factory ArbEntry.fromMap(Map<String, dynamic> map) {
+    return ArbEntry(
+      key: map['key'] ?? '',
+      localizedValues: Map<String, String>.from(map['localizedValues']),
+      groupId: map['groupId'] ?? '',
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ArbEntry.fromJson(String source) =>
+      ArbEntry.fromMap(json.decode(source));
+
+  @override
+  List<Object?> get props => [key, localizedValues, groupId];
 }

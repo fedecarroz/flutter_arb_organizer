@@ -10,19 +10,18 @@ abstract class ArbEditorState extends Equatable {
 }
 
 class ArbEditorInitial extends ArbEditorState {
-  ArbEditorInitial()
-      : super(
-          ArbDocument(
-            projectName: 'new_project',
-            mainLanguage: LanguagesSupported.itIT,
-          ),
-        );
+  const ArbEditorInitial(ArbDocument document) : super(document);
 }
 
-class ArbEditorDocumentLoadSuccess extends ArbEditorState {
-  const ArbEditorDocumentLoadSuccess(ArbDocument document) : super(document);
+class ArbEditorDocumentUpdateInProgress extends ArbEditorState {
+  const ArbEditorDocumentUpdateInProgress(ArbDocument document)
+      : super(document);
 }
 
 class ArbEditorDocumentUpdateSuccess extends ArbEditorState {
   const ArbEditorDocumentUpdateSuccess(ArbDocument document) : super(document);
+}
+
+class ArbEditorDocumentUpdateFailure extends ArbEditorState {
+  const ArbEditorDocumentUpdateFailure(ArbDocument document) : super(document);
 }

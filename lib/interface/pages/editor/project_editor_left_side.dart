@@ -125,7 +125,7 @@ class _LeftMainMenu extends StatelessWidget {
         _LeftButton(
           centerText: true,
           specialColor: true,
-          label: 'Esporta',
+          label: 'Esporta files .arb',
           onTap: () {},
         ),
       ],
@@ -178,7 +178,22 @@ class _LeftGroupMenu extends StatelessWidget {
     final appLocal = AppLocalizations.of(context)!;
 
     return Column(
-      children: [
+      children: <Widget>[
+        BlocBuilder<ArbEditorBloc, ArbEditorState>(
+          builder: (context, state) {
+            return ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: state.document.groups.length,
+              itemBuilder: (context, index) {
+                return _LeftButton(
+                  label: state.document.groups.values.elementAt(index),
+                  onTap: () {},
+                );
+              },
+            );
+          },
+        ),
         _LeftButton(
           centerText: true,
           label: '+',
