@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_arb_organizer/data.dart';
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class AppRouter {
   Route? onGenerateRoute(RouteSettings routeSettings) {
-    //final args = routeSettings.arguments;
+    final args = routeSettings.arguments;
 
     switch (routeSettings.name) {
       case homeRoute:
@@ -21,9 +22,11 @@ class AppRouter {
           ], child: const HomePage()),
         );
       case projectEditorRoute:
+        final arbDoc = args as ArbDocument;
+
         return MaterialPageRoute(
           builder: (context) => BlocProvider(
-            create: (context) => EditorMenuBloc(),
+            create: (context) => EditorMenuBloc(arbDoc),
             child: const ProjectEditorPage(),
           ),
         );
