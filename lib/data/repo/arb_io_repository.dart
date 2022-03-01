@@ -36,9 +36,14 @@ class IORepository {
   ArbLanguage parseArbLanguageDocument(File arb) {
     final filename = arb.uri.pathSegments.last;
     final lang = filename.replaceAll(RegExp(r'(app_)|(.arb)'), '');
+    final langNormalized = LanguagesSupported.values.firstWhere(
+      (l) => l.startsWith(lang),
+      orElse: () => '',
+    );
+
     final arbJson = readArb(arb);
 
-    return ArbLanguage(lang: lang, entries: arbJson);
+    return ArbLanguage(lang: langNormalized, entries: arbJson);
   }
 
   ArbDocument readArbDocument(File arbDocumentFile) {

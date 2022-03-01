@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter_arb_organizer/data.dart';
 
 class ArbDocument {
+  final String version;
   final String projectName;
   final List<ArbLanguage> languages;
   final String mainLanguage;
@@ -13,6 +14,7 @@ class ArbDocument {
     this.languages = const <ArbLanguage>[],
     required this.mainLanguage,
     this.groups = const <ArbEntriesGroups>[],
+    this.version = '1.0.0',
   });
 
   ArbDocument.fromJson(Map<String, dynamic> json)

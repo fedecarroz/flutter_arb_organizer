@@ -123,108 +123,125 @@ class _ArbImportCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _CardHeader(
-          title: 'Importa file Arb',
-          onBack: () => context
-            ..read<HomeBloc>().add(HomeResetted())
-            ..read<ArbImportFormBloc>().add(ArbImportFormResetted()),
-        ),
-        const SizedBox(height: 15),
-        TextFormField(
-          // initialValue: state.name,
-          decoration: const InputDecoration(
-            hintText: 'Nome del progetto',
+    return BlocListener<ArbImportFormBloc, ArbImportFormState>(
+      listener: (context, state) {
+        if (state is ArbImportFormSaveSuccess) {
+          Navigator.pushNamed(
+            context,
+            projectEditorRoute,
+            arguments: state.document,
+          );
+        }
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _CardHeader(
+            title: 'Importa file Arb',
+            onBack: () => context
+              ..read<HomeBloc>().add(HomeResetted())
+              ..read<ArbImportFormBloc>().add(ArbImportFormResetted()),
           ),
-          onChanged: (name) => context
-              .read<ArbCreateFormBloc>()
-              .add(ArbCreateFormNameUpdated(name)),
-        ),
-        const SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Expanded(
-              child: BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
-                builder: (context, state) {
-                  return Text(
-                    'Lingua principale: ${state.mainLang}',
-                    style: const TextStyle(fontSize: 16),
-                  );
-                },
-              ),
+          const SizedBox(height: 15),
+          TextFormField(
+            // initialValue: state.name,
+            decoration: const InputDecoration(
+              hintText: 'Nome del progetto',
             ),
-            SecondaryButton(
-              onPressed: () => _changeMainLang(context),
-              label: 'Cambia',
-            ),
-          ],
-        ),
-        const SizedBox(height: 15),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            const Expanded(
-              child: Text(
-                'Arb importati',
-                style: TextStyle(
-                  fontSize: 16,
+            onChanged: (name) => context
+                .read<ArbImportFormBloc>()
+                .add(ArbImportFormProjectNameUpdated(name)),
+          ),
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Expanded(
+                child: BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
+                  builder: (context, state) {
+                    return Text(
+                      'Lingua principale: ${state.mainLang}',
+                      style: const TextStyle(fontSize: 16),
+                    );
+                  },
                 ),
               ),
-            ),
-            SecondaryButton(
-              onPressed: () => context
-                  .read<ArbImportFormBloc>()
-                  .add(ArbImportFormFilePickerRequested()),
-              label: '+',
-              fontSize: 22,
-            ),
-          ],
-        ),
-        BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
-          builder: (context, state) {
-            return SizedBox(
-              height: 200,
-              child: ListView.builder(
-                physics: const ClampingScrollPhysics(),
-                itemCount: state.languages.length,
-                itemBuilder: (context, index) {
-                  final langDoc = state.languages[index];
-                  return ListTile(
-                    title: Text('ARB ${langDoc.lang}'),
-                    subtitle:
-                        Text('Voci trovate: ${langDoc.entries.keys.length}'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.settings),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.delete),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+              SecondaryButton(
+                onPressed: () => _changeMainLang(context),
+                label: 'Cambia',
               ),
-            );
-          },
-        ),
-        const SizedBox(height: 20),
-        Center(
-          child: PrimaryButton(
-            onPressed: () =>
-                context.read<ArbCreateFormBloc>().add(ArbCreateFormSubmitted()),
-            label: 'Avanti',
+            ],
           ),
-        ),
-      ],
+          const SizedBox(height: 15),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              const Expanded(
+                child: Text(
+                  'Arb importati',
+                  style: TextStyle(
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SecondaryButton(
+                onPressed: () => context
+                    .read<ArbImportFormBloc>()
+                    .add(ArbImportFormFilePickerRequested()),
+                label: '+',
+                fontSize: 22,
+              ),
+            ],
+          ),
+          BlocBuilder<ArbImportFormBloc, ArbImportFormState>(
+            builder: (context, state) {
+              return SizedBox(
+                height: 200,
+                child: ListView.builder(
+                  physics: const ClampingScrollPhysics(),
+                  itemCount: state.languages.length,
+                  itemBuilder: (context, index) {
+                    final langDoc = state.languages[index];
+                    return ListTile(
+                      title: Text('ARB ${langDoc.lang}'),
+                      subtitle:
+                          Text('Voci trovate: ${langDoc.entries.keys.length}'),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          IconButton(
+                            onPressed: () => _changeSingleLang(
+                              context,
+                              langDoc.lang,
+                            ),
+                            icon: const Icon(Icons.settings),
+                          ),
+                          IconButton(
+                            onPressed: () => context
+                                .read<ArbImportFormBloc>()
+                                .add(ArbImportFormLangRemoved(langDoc.lang)),
+                            icon: const Icon(Icons.delete),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: PrimaryButton(
+              onPressed: () => context.read<ArbImportFormBloc>().add(
+                    ArbImportFormSubmitted(),
+                  ),
+              label: 'Avanti',
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -232,12 +249,34 @@ class _ArbImportCard extends StatelessWidget {
     final arbLangs = context.read<ArbImportFormBloc>().state.languages;
     final languages = arbLangs.map((l) => l.lang).toList();
 
-    final newMainLang = await _showMainLanguageSelectDialog(context, languages);
+    final newMainLang =
+        await _showSingleLanguageSelectDialog(context, languages);
 
     if (newMainLang != null) {
       context
           .read<ArbImportFormBloc>()
           .add(ArbImportFormMainLangUpdated(newMainLang));
+    }
+  }
+
+  void _changeSingleLang(BuildContext context, String currentLang) async {
+    final arbLangs = context.read<ArbImportFormBloc>().state.languages;
+    final languages = arbLangs.map((l) => l.lang).toList();
+
+    final langsAvailable = LanguagesSupported.values
+        .where((lang) => !languages.contains(lang))
+        .toList();
+
+    final newLang = await _showSingleLanguageSelectDialog(
+      context,
+      langsAvailable,
+      dialogTitle: 'Aggiorna la lingua',
+    );
+
+    if (newLang != null) {
+      context
+          .read<ArbImportFormBloc>()
+          .add(ArbImportFormLangUpdated(currentLang, newLang));
     }
   }
 }
@@ -507,7 +546,8 @@ class _ProjectDetails extends StatelessWidget {
 
   void _changeMainLang(BuildContext context) async {
     final languages = context.read<ArbCreateFormBloc>().state.languages;
-    final newMainLang = await _showMainLanguageSelectDialog(context, languages);
+    final newMainLang =
+        await _showSingleLanguageSelectDialog(context, languages);
 
     if (newMainLang != null) {
       context
@@ -517,10 +557,13 @@ class _ProjectDetails extends StatelessWidget {
   }
 }
 
-Future<String?> _showMainLanguageSelectDialog(
+Future<String?> _showSingleLanguageSelectDialog(
   BuildContext context,
-  List<String> languages,
-) async {
+  List<String> languages, {
+  String? dialogTitle,
+}) async {
+  final _dialogTitle = dialogTitle ?? 'Scegli la lingua principale';
+
   return showDialog<String?>(
     context: context,
     builder: (context) {
@@ -543,7 +586,7 @@ Future<String?> _showMainLanguageSelectDialog(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               _CardHeader(
-                title: 'Scegli la lingua principale',
+                title: _dialogTitle,
                 onBack: () => Navigator.pop(context),
               ),
               if (languages.isEmpty)

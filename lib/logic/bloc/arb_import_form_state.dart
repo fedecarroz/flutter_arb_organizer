@@ -88,6 +88,12 @@ class ArbImportFormSaveFailure extends ArbImportFormState {
       ];
 }
 
-enum ArbImportFormStatus { initial, updateSuccess, saveSuccess, saveFailure }
+enum ArbImportFormStatus {
+  initial,
+  updateProgress,
+  updateSuccess,
+  saveSuccess,
+  saveFailure,
+}
 
 enum ArbImportFormErrorType { missingName, missingMainLang, missingLangs }

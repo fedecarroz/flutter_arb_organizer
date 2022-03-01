@@ -30,6 +30,15 @@ class ArbImportFormFileAdded extends ArbImportFormEvent {
   List<Object?> get props => [languages];
 }
 
+class ArbImportFormLangRemoved extends ArbImportFormEvent {
+  final String language;
+
+  ArbImportFormLangRemoved(this.language);
+
+  @override
+  List<Object?> get props => [language];
+}
+
 class ArbImportFormLangUpdated extends ArbImportFormEvent {
   final String langToChange;
   final String langNewValue;

@@ -14,22 +14,37 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     on<ArbImportFormMainLangUpdated>(_manageMainLangUpdate);
     on<ArbImportFormSubmitted>(_manageLangSubmit);
     on<ArbImportFormFilePickerRequested>(_manageImportRequest);
+    on<ArbImportFormLangRemoved>(_manageLangRemove);
   }
 
   void _manageImportRequest(
     ArbImportFormFilePickerRequested event,
     Emitter<ArbImportFormState> emit,
   ) async {
+    emit(
+      state.copyWith(
+        status: ArbImportFormStatus.updateProgress,
+      ),
+    );
+
     final files = await IORepository().readFiles(
       extensionsAllowed: [FilesSupported.arb],
     );
+
     final langs = _rebuildLanguages(files.whereType<ArbLanguage>().toList());
-    emit(state.copyWith(languages: [...langs]));
+
+    emit(
+      state.copyWith(
+        languages: langs,
+        status: ArbImportFormStatus.updateSuccess,
+      ),
+    );
   }
 
   List<ArbLanguage> _rebuildLanguages(List<ArbLanguage> newLangs) {
-    final langDocsToAdd = newLangs;
-    final currentLangs = List<ArbLanguage>.from(state.languages).map((langDoc) {
+    final langDocsToAdd = List.of(newLangs);
+
+    final currentLangs = state.languages.map((langDoc) {
       final langDocToImportIndex =
           langDocsToAdd.indexWhere((_l) => _l.lang == langDoc.lang);
 
@@ -39,7 +54,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
       }
 
       return langDoc;
-    });
+    }).toList();
 
     return [...currentLangs, ...langDocsToAdd];
   }
@@ -48,15 +63,32 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     ArbImportFormFileAdded event,
     Emitter<ArbImportFormState> emit,
   ) {
+    emit(
+      state.copyWith(
+        status: ArbImportFormStatus.updateProgress,
+      ),
+    );
+
     final langs = _rebuildLanguages(event.languages);
-    emit(state.copyWith(languages: langs));
+
+    emit(
+      state.copyWith(
+        languages: langs,
+        status: ArbImportFormStatus.updateSuccess,
+      ),
+    );
   }
 
   void _manageProjectNameUpdate(
     ArbImportFormProjectNameUpdated event,
     Emitter<ArbImportFormState> emit,
   ) {
-    emit(state.copyWith(projectName: event.projectName));
+    emit(
+      state.copyWith(
+        projectName: event.projectName,
+        status: ArbImportFormStatus.updateSuccess,
+      ),
+    );
   }
 
   void _manageLangDocUpdate(
@@ -76,6 +108,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
 
     emit(
       state.copyWith(
+        status: ArbImportFormStatus.updateSuccess,
         languages: [...languages],
         mainLang:
             state.mainLang == event.langToChange ? event.langNewValue : null,
@@ -87,7 +120,34 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     ArbImportFormMainLangUpdated event,
     Emitter<ArbImportFormState> emit,
   ) {
-    emit(state.copyWith(mainLang: event.mainLang));
+    emit(state.copyWith(
+      mainLang: event.mainLang,
+      status: ArbImportFormStatus.updateSuccess,
+    ));
+  }
+
+  void _manageLangRemove(
+    ArbImportFormLangRemoved event,
+    Emitter<ArbImportFormState> emit,
+  ) {
+    emit(
+      state.copyWith(
+        status: ArbImportFormStatus.updateProgress,
+      ),
+    );
+
+    final langs = List.of(state.languages)
+      ..removeWhere((l) => l.lang == event.language);
+
+    final mainLangIsRemoved = !langs.any((l) => l.lang == state.mainLang);
+
+    emit(
+      state.copyWith(
+        mainLang: mainLangIsRemoved ? '' : null,
+        languages: langs,
+        status: ArbImportFormStatus.updateSuccess,
+      ),
+    );
   }
 
   void _manageLangSubmit(
