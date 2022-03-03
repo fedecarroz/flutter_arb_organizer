@@ -33,7 +33,7 @@ class IORepository {
     return filesParsed;
   }
 
-  ArbLanguage parseArbLanguageDocument(File arb) {
+  ArbFile parseArbLanguageDocument(File arb) {
     final filename = arb.uri.pathSegments.last;
     final lang = filename.replaceAll(RegExp(r'(app_)|(.arb)'), '');
     final langNormalized = LanguagesSupported.values.firstWhere(
@@ -43,16 +43,12 @@ class IORepository {
 
     final arbJson = readArb(arb);
 
-    return ArbLanguage(lang: langNormalized, entries: arbJson);
+    return ArbFile(lang: langNormalized, entries: arbJson);
   }
 
   ArbDocument readArbDocument(File arbDocumentFile) {
     final fileContent = utf8.decode(arbDocumentFile.readAsBytesSync());
-    final json = jsonDecode(fileContent);
-
-    final arbDocJson = Map<String, dynamic>.from(json);
-
-    return ArbDocument.fromJson(arbDocJson);
+    return ArbDocument.fromJson(fileContent);
   }
 
   Map<String, String> readArb(File file) {
@@ -65,12 +61,22 @@ class IORepository {
 
   Future<bool> saveArbs(ArbDocument document) async {
     try {
-      final arbFiles = document.toArbFiles().map((key, value) {
-        final bytes = utf8.encode(value);
-        return MapEntry(key, Uint8List.fromList(bytes));
+      final arbFiles = document.languages.map((lang) {
+        final arbContentMap = document.labels.map(
+          (id, entry) => MapEntry(
+            entry.key,
+            entry.localizedValues[lang] ?? '',
+          ),
+        );
+        final arbContentText = jsonEncode(arbContentMap);
+        final arbContent = Uint8List.fromList(utf8.encode(arbContentText));
+
+        final langReduced = lang.split('_').first;
+
+        return MapEntry(langReduced, arbContent);
       });
 
-      _ioApi.saveMultipleFiles(arbFiles, 'arbs.zip');
+      _ioApi.saveMultipleFiles(Map.fromEntries(arbFiles), 'arbs.zip');
 
       return true;
     } on Exception {

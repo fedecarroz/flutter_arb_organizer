@@ -76,14 +76,10 @@ class ArbCreateFormBloc extends Bloc<ArbCreateFormEvent, ArbCreateFormState> {
           );
         }
 
-        final arbLangs = state.languages
-            .map((l) => ArbLanguage(lang: l, entries: {}))
-            .toList();
-
         final arbDocument = ArbDocument(
           projectName: state.name,
           mainLanguage: state.mainLang,
-          languages: arbLangs,
+          languages: state.languages.toSet(),
         );
 
         emit(

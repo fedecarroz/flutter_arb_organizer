@@ -31,7 +31,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
       extensionsAllowed: [FilesSupported.arb],
     );
 
-    final langs = _rebuildLanguages(files.whereType<ArbLanguage>().toList());
+    final langs = _rebuildLanguages(files.whereType<ArbFile>().toList());
 
     emit(
       state.copyWith(
@@ -41,7 +41,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     );
   }
 
-  List<ArbLanguage> _rebuildLanguages(List<ArbLanguage> newLangs) {
+  List<ArbFile> _rebuildLanguages(List<ArbFile> newLangs) {
     final langDocsToAdd = List.of(newLangs);
 
     final currentLangs = state.languages.map((langDoc) {
@@ -95,7 +95,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     ArbImportFormLangUpdated event,
     Emitter<ArbImportFormState> emit,
   ) {
-    final languages = List<ArbLanguage>.of(state.languages);
+    final languages = List<ArbFile>.of(state.languages);
     final langIndexToChange = languages.indexWhere(
       (l) => l.lang == event.langToChange,
     );
@@ -175,10 +175,34 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
       );
     }
 
+    final langSet = state.languages.map((l) => l.lang).toSet();
+    var entries = <String, ArbEntry>{};
+
+    for (var arbFile in state.languages) {
+      arbFile.entries.forEach((key, value) {
+        if (entries.containsKey(key)) {
+          entries[key]!.localizedValues[arbFile.lang] = value;
+        } else {
+          final localizedValues = {arbFile.lang: value};
+          final langsWithoutValue = {...langSet}..remove(arbFile.lang);
+
+          for (final lang in langsWithoutValue) {
+            localizedValues[lang] = '';
+          }
+
+          entries[key] = ArbEntry(
+            key: key,
+            localizedValues: localizedValues,
+            groupId: '',
+          );
+        }
+      });
+    }
+
     final arbDocument = ArbDocument(
       projectName: state.projectName,
       mainLanguage: state.mainLang,
-      languages: state.languages,
+      languages: state.languages.map((l) => l.lang).toSet(),
     );
 
     emit(

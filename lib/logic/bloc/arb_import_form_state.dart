@@ -3,7 +3,7 @@ part of 'arb_import_form_bloc.dart';
 class ArbImportFormState extends Equatable {
   final ArbImportFormStatus status;
   final String mainLang;
-  final List<ArbLanguage> languages;
+  final List<ArbFile> languages;
   final String projectName;
 
   const ArbImportFormState({
@@ -23,7 +23,7 @@ class ArbImportFormState extends Equatable {
   ArbImportFormState copyWith({
     String? mainLang,
     ArbImportFormStatus? status,
-    List<ArbLanguage>? languages,
+    List<ArbFile>? languages,
     String? projectName,
   }) {
     return ArbImportFormState(
@@ -44,7 +44,7 @@ class ArbImportFormSaveSuccess extends ArbImportFormState {
   const ArbImportFormSaveSuccess({
     required this.document,
     required String mainLang,
-    required List<ArbLanguage> languages,
+    required List<ArbFile> languages,
     required String projectName,
   }) : super(
           status: ArbImportFormStatus.saveSuccess,
@@ -69,7 +69,7 @@ class ArbImportFormSaveFailure extends ArbImportFormState {
   const ArbImportFormSaveFailure({
     required this.errorType,
     required String mainLang,
-    required List<ArbLanguage> languages,
+    required List<ArbFile> languages,
     required String projectName,
   }) : super(
           status: ArbImportFormStatus.saveFailure,

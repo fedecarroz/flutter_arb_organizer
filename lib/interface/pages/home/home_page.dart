@@ -73,12 +73,12 @@ class _HomePageState extends State<HomePage> {
     if (state is FileIOLoadComplete && homeState is HomeLanguagesImport) {
       context.read<ArbImportFormBloc>().add(
             ArbImportFormFileAdded(
-              state.docs.whereType<ArbLanguage>().toList(),
+              state.docs.whereType<ArbFile>().toList(),
             ),
           );
     } else if (state is FileIOLoadComplete) {
       final documentQueryResult = state.docs.whereType<ArbDocument>();
-      final languagesQueryResult = state.docs.whereType<ArbLanguage>();
+      final languagesQueryResult = state.docs.whereType<ArbFile>();
 
       if (documentQueryResult.isNotEmpty) {
         context

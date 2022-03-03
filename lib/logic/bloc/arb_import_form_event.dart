@@ -22,7 +22,7 @@ class ArbImportFormFilePickerRequested extends ArbImportFormEvent {
 }
 
 class ArbImportFormFileAdded extends ArbImportFormEvent {
-  final List<ArbLanguage> languages;
+  final List<ArbFile> languages;
 
   ArbImportFormFileAdded(this.languages);
 
