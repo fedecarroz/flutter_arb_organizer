@@ -1,8 +1,10 @@
-class ArbFile {
+import 'package:equatable/equatable.dart';
+
+class ArbFile extends Equatable {
   final String lang;
   final Map<String, String> entries;
 
-  ArbFile({required this.lang, required this.entries});
+  const ArbFile({required this.lang, required this.entries});
 
   ArbFile copyWith({
     String? lang,
@@ -13,4 +15,7 @@ class ArbFile {
       entries: entries ?? this.entries,
     );
   }
+
+  @override
+  List<Object?> get props => [lang, entries];
 }
