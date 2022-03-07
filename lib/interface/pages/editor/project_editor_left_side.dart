@@ -106,7 +106,7 @@ class _LeftMainMenu extends StatelessWidget {
     final appLocal = AppLocalizations.of(context)!;
 
     return Column(
-      children: [
+      children: <Widget>[
         _LeftButton(
           label: 'Etichette e info progetto',
           onTap: () =>
@@ -140,32 +140,39 @@ class _LeftAllEntriesMenu extends StatelessWidget {
   Widget build(BuildContext context) {
     final appLocal = AppLocalizations.of(context)!;
 
-    return Column(
-      children: [
-        _LeftButton(
-          label: 'Nome progetto: new_project'.toString(),
-          onTap: null,
-        ),
-        _LeftButton(
-          label: 'Totale stringhe localizzate: 180'.toString(),
-          onTap: null,
-        ),
-        _LeftButton(
-          label: 'Gruppi creati: 6'.toString(),
-          onTap: null,
-        ),
-        _LeftButton(
-          label: 'Lingue supportate: 2'.toString(),
-          onTap: null,
-        ),
-        const Expanded(child: SizedBox()),
-        _LeftButton(
-          centerText: true,
-          specialColor: true,
-          label: 'Indietro',
-          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
-        ),
-      ],
+    return BlocBuilder<ArbEditorBloc, ArbEditorState>(
+      builder: (context, state) {
+        final arbDoc = state.document;
+
+        return Column(
+          children: <Widget>[
+            _LeftButton(
+              label: 'Nome progetto: ${arbDoc.projectName}',
+              onTap: null,
+            ),
+            _LeftButton(
+              label: 'Totale stringhe localizzate: ${arbDoc.labels.length}',
+              onTap: null,
+            ),
+            _LeftButton(
+              label: 'Gruppi creati: ${arbDoc.groups.length}',
+              onTap: null,
+            ),
+            _LeftButton(
+              label: 'Lingue supportate: ${arbDoc.languages.length}',
+              onTap: null,
+            ),
+            const Expanded(child: SizedBox()),
+            _LeftButton(
+              centerText: true,
+              specialColor: true,
+              label: 'Indietro',
+              onTap: () =>
+                  context.read<EditorMenuBloc>().add(MainMenuClicked()),
+            ),
+          ],
+        );
+      },
     );
   }
 }

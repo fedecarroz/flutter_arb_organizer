@@ -26,12 +26,12 @@ class ArbEditorEntryUpdated extends ArbEditorEvent {
 }
 
 class ArbEditorEntryRemoved extends ArbEditorEvent {
-  final String entryKey;
+  final ArbEntry arbEntry;
 
-  const ArbEditorEntryRemoved(this.entryKey);
+  const ArbEditorEntryRemoved(this.arbEntry);
 
   @override
-  List<Object?> get props => [entryKey];
+  List<Object?> get props => [arbEntry];
 }
 
 class ArbEditorGroupCreated extends ArbEditorEvent {
@@ -58,15 +58,15 @@ class ArbEditorGroupNameUpdated extends ArbEditorEvent {
 
 class ArbEditorGroupEntryAdded extends ArbEditorEvent {
   final String groupId;
-  final String entryKey;
+  final ArbEntry arbEntry;
 
   const ArbEditorGroupEntryAdded({
     required this.groupId,
-    required this.entryKey,
+    required this.arbEntry,
   });
 
   @override
-  List<Object?> get props => [groupId, entryKey];
+  List<Object?> get props => [groupId, arbEntry];
 }
 
 class ArbEditorGroupRemoved extends ArbEditorEvent {
@@ -92,12 +92,16 @@ class ArbEditorLanguageAdded extends ArbEditorEvent {
 }
 
 class ArbEditorLanguageUpdated extends ArbEditorEvent {
-  final String lang;
+  final String oldLang;
+  final String newLang;
 
-  const ArbEditorLanguageUpdated(this.lang);
+  const ArbEditorLanguageUpdated({
+    required this.oldLang,
+    required this.newLang,
+  });
 
   @override
-  List<Object?> get props => [lang];
+  List<Object?> get props => [oldLang, newLang];
 }
 
 class ArbEditorLanguageRemoved extends ArbEditorEvent {
