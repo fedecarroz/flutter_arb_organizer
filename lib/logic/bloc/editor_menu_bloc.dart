@@ -12,6 +12,8 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     on<AllEntriesMenuClicked>(_manageAllEntriesMenuClicked);
     on<GroupMenuClicked>(_manageGroupMenuClicked);
     on<LanguageMenuClicked>(_manageLanguageMenuClicked);
+    on<LanguageMenuAddClicked>(_manageLanguageMenuAddClicked);
+    on<LanguageMenuUpdateClicked>(_manageLanguageMenuUpdateClicked);
   }
 
   void _manageMainMenuClicked(
@@ -36,5 +38,22 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     LanguageMenuClicked event,
     Emitter<EditorMenuState> emit,
   ) =>
-      emit(const EditorLanguageMenuState('Lingue supportate'));
+      emit(const EditorLanguageMenuInitial('Lingue supportate'));
+
+  void _manageLanguageMenuAddClicked(
+    LanguageMenuAddClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(const EditorLanguageMenuAddStart('Lingue supportate'));
+
+  void _manageLanguageMenuUpdateClicked(
+    LanguageMenuUpdateClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(
+        EditorLanguageMenuUpdateStart(
+          'Lingue supportate',
+          event.currentLang,
+        ),
+      );
 }

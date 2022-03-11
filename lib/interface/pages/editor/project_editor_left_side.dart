@@ -224,13 +224,23 @@ class _LeftLanguageMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appLocal = AppLocalizations.of(context)!;
-
+    final arbLangs = context.watch<ArbEditorBloc>().state.document.languages;
     return Column(
       children: [
+        for (final lang in arbLangs)
+          _LeftButton(
+            centerText: true,
+            label: lang,
+            onTap: () => context.read<EditorMenuBloc>().add(
+                  LanguageMenuUpdateClicked(lang),
+                ),
+          ),
         _LeftButton(
           centerText: true,
           label: '+',
-          onTap: () {},
+          onTap: () => context.read<EditorMenuBloc>().add(
+                LanguageMenuAddClicked(),
+              ),
         ),
         const Expanded(child: SizedBox()),
         _LeftButton(

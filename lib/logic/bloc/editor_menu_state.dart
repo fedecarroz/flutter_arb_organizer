@@ -21,6 +21,23 @@ class EditorGroupMenuState extends EditorMenuState {
   const EditorGroupMenuState(String pageName) : super(pageName);
 }
 
-class EditorLanguageMenuState extends EditorMenuState {
+abstract class EditorLanguageMenuState extends EditorMenuState {
   const EditorLanguageMenuState(String pageName) : super(pageName);
+}
+
+class EditorLanguageMenuInitial extends EditorLanguageMenuState {
+  const EditorLanguageMenuInitial(String pageName) : super(pageName);
+}
+
+class EditorLanguageMenuAddStart extends EditorLanguageMenuState {
+  const EditorLanguageMenuAddStart(String pageName) : super(pageName);
+}
+
+class EditorLanguageMenuUpdateStart extends EditorLanguageMenuState {
+  final String currentLang;
+
+  const EditorLanguageMenuUpdateStart(String pageName, this.currentLang)
+      : super(pageName);
+  @override
+  List<Object> get props => [pageName, currentLang];
 }
