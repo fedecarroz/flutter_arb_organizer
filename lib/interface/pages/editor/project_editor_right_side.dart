@@ -258,7 +258,7 @@ class _RightLanguageUpdateMenu extends StatelessWidget {
     return Center(
       child: LangSelectCard(
         languages: languagesAvailable.toList(),
-        title: 'Aggiungi lingua',
+        title: 'Cambia lingua',
         onLanguageClick: (lang) {
           final editorMenuState = context.read<EditorMenuBloc>().state;
           if (editorMenuState is EditorLanguageMenuUpdateStart) {
