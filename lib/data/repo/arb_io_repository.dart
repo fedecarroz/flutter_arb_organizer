@@ -50,7 +50,8 @@ class IORepository {
 
   ArbDocument readArbDocument(File arbDocumentFile) {
     final fileContent = utf8.decode(arbDocumentFile.readAsBytesSync());
-    return ArbDocument.fromJson(fileContent);
+    final json = jsonDecode(fileContent);
+    return ArbDocument.fromJson(json);
   }
 
   Map<String, String> readArb(File file) {
