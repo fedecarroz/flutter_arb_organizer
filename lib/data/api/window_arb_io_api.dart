@@ -28,18 +28,24 @@ class WindowArbIOApi extends IOApiInterface {
   saveArbFile() {}
 
   @override
-  Future<void> saveFile(String filename, Uint8List content) async {
-    final fileSavePath = await FilePicker.platform.saveFile(
-      type: FileType.custom,
-      allowedExtensions: ['arbdoc'],
-      fileName: filename,
-    );
+  Future<void> saveArbDocument(String filename, Uint8List content) async {
+    final arbDocPahth = GlobalConfiguration().arbDocumentPath;
 
-    await File(fileSavePath!).writeAsBytes(content);
+    final fileSavePath = arbDocPahth ??
+        await FilePicker.platform.saveFile(
+          type: FileType.custom,
+          allowedExtensions: ['arbdoc'],
+          fileName: filename,
+        );
+
+    if (fileSavePath != null) {
+      await File(fileSavePath).writeAsBytes(content);
+      GlobalConfiguration().copyWith(arbDocumentPath: fileSavePath);
+    }
   }
 
   @override
-  Future<void> saveMultipleFiles(
+  Future<void> saveArbFiles(
     Map<String, Uint8List> files, [
     String? defaultFileName,
   ]) async {
@@ -51,7 +57,9 @@ class WindowArbIOApi extends IOApiInterface {
       fileName: defaultFileName,
     );
 
-    final fileStream = OutputFileStream(fileSavePath!);
+    if (fileSavePath == null) return;
+
+    final fileStream = OutputFileStream(fileSavePath);
     zipEncoder.startEncode(fileStream);
 
     for (final file in files.entries) {

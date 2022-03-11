@@ -60,7 +60,10 @@ class _FAB extends StatelessWidget {
           focusColor: Colors.blue[900],
           splashColor: Colors.blue[600],
           hoverColor: Colors.blue[700],
-          onPressed: () {},
+          onPressed: () {
+            final doc = context.read<ArbEditorBloc>().state.document;
+            context.read<FileIOBloc>().add(FileIOArbDocSaved(doc));
+          },
           child: const Icon(
             Icons.save,
             color: Colors.white,

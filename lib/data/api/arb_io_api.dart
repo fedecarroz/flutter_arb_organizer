@@ -6,10 +6,10 @@ abstract class IOApiInterface {
 
   Future<List<File>> readFilesFromPicker({List<String>? extensionsAllowed});
 
-  Future<void> saveMultipleFiles(
+  Future<void> saveArbFiles(
     Map<String, Uint8List> files, [
     String? defaultFileName,
   ]);
 
-  Future<void> saveFile(String filename, Uint8List content);
+  Future<void> saveArbDocument(String filename, Uint8List content);
 }

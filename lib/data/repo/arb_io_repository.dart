@@ -22,11 +22,13 @@ class IORepository {
 
     for (final file in files) {
       if (file.path.endsWith('.${FilesSupported.arb}')) {
-        final arbLanguage = parseArbLanguageDocument(file);
-        filesParsed.add(arbLanguage);
+        final arbFile = parseArbLanguageDocument(file);
+        filesParsed.add(arbFile);
       } else if (file.path.endsWith('.${FilesSupported.arbdoc}')) {
         final arbDoc = readArbDocument(file);
         filesParsed.add(arbDoc);
+        GlobalConfiguration().copyWith(arbDocumentPath: file.path);
+        break;
       }
     }
 
@@ -71,12 +73,12 @@ class IORepository {
         final arbContentText = jsonEncode(arbContentMap);
         final arbContent = Uint8List.fromList(utf8.encode(arbContentText));
 
-        final langReduced = lang.split('_').first;
+        final langReduced = "${lang.split('_').first}.arb";
 
         return MapEntry(langReduced, arbContent);
       });
 
-      _ioApi.saveMultipleFiles(Map.fromEntries(arbFiles), 'arbs.zip');
+      _ioApi.saveArbFiles(Map.fromEntries(arbFiles), 'arbs.zip');
 
       return true;
     } on Exception {
@@ -90,7 +92,7 @@ class IORepository {
       final arbDocContent = utf8.encode(jsonEncode(arbDocJson));
       final arbBytes = Uint8List.fromList(arbDocContent);
 
-      _ioApi.saveFile('document.arbdoc', arbBytes);
+      _ioApi.saveArbDocument('document.arbdoc', arbBytes);
       return true;
     } on Exception {
       return false;

@@ -18,7 +18,20 @@ class FileIODropped extends FileIOEvent {
   List<Object?> get props => [files];
 }
 
-class FileIOSaved extends FileIOEvent {
+class FileIOArbsSaved extends FileIOEvent {
+  final ArbDocument document;
+
+  const FileIOArbsSaved(this.document);
+
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [document];
+}
+
+class FileIOArbDocSaved extends FileIOEvent {
+  final ArbDocument document;
+
+  const FileIOArbDocSaved(this.document);
+
+  @override
+  List<Object?> get props => [document];
 }

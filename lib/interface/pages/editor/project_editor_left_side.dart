@@ -126,7 +126,10 @@ class _LeftMainMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Esporta files .arb',
-          onTap: () {},
+          onTap: () {
+            final doc = context.read<ArbEditorBloc>().state.document;
+            context.read<FileIOBloc>().add(FileIOArbsSaved(doc));
+          },
         ),
       ],
     );

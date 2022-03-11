@@ -9,7 +9,7 @@ class FileIOInitial extends FileIOState {
   List<Object> get props => [];
 }
 
-class FileIOLoadPenging extends FileIOState {
+class FileIOLoadInProgress extends FileIOState {
   @override
   List<Object> get props => [];
 }
@@ -21,4 +21,19 @@ class FileIOLoadComplete extends FileIOState {
 
   @override
   List<Object> get props => [docs];
+}
+
+class FileIOSaveInProgress extends FileIOState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileIOSaveComplete extends FileIOState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileIOSaveFailure extends FileIOState {
+  @override
+  List<Object> get props => [];
 }
