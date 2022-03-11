@@ -1,11 +1,12 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_arb_organizer/data.dart';
+import 'package:flutter_arb_organizer/helper.dart';
+import 'package:flutter_arb_organizer/interface.dart';
+import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
-
-import 'package:flutter_arb_organizer/helper.dart';
-import 'package:flutter_arb_organizer/logic.dart';
 
 class RightSide extends StatelessWidget {
   const RightSide({Key? key}) : super(key: key);
@@ -201,6 +202,75 @@ class _RightLanguageMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(); //TODO: implementare
+    return BlocListener<ArbEditorBloc, ArbEditorState>(
+      listener: (context, state) {
+        if (state is ArbEditorDocumentUpdateSuccess) {
+          context.read<EditorMenuBloc>().add(LanguageMenuClicked());
+        }
+      },
+      child: BlocBuilder<EditorMenuBloc, EditorMenuState>(
+        builder: (context, state) {
+          if (state is EditorLanguageMenuAddStart) {
+            return const _RightLanguageAddMenu();
+          } else if (state is EditorLanguageMenuUpdateStart) {
+            return const _RightLanguageUpdateMenu();
+          } else {
+            return Container();
+          }
+        },
+      ),
+    );
+  }
+}
+
+class _RightLanguageAddMenu extends StatelessWidget {
+  const _RightLanguageAddMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final languages = context.watch<ArbEditorBloc>().state.document.languages;
+
+    final languagesAvailable =
+        LanguagesSupported.values.where((l) => !languages.contains(l));
+
+    return Center(
+      child: LangSelectCard(
+        languages: languagesAvailable.toList(),
+        title: 'Aggiungi lingua',
+        onLanguageClick: (lang) => context.read<ArbEditorBloc>().add(
+              ArbEditorLanguageAdded(lang),
+            ),
+      ),
+    );
+  }
+}
+
+class _RightLanguageUpdateMenu extends StatelessWidget {
+  const _RightLanguageUpdateMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final languages = context.watch<ArbEditorBloc>().state.document.languages;
+
+    final languagesAvailable =
+        LanguagesSupported.values.where((l) => !languages.contains(l));
+
+    return Center(
+      child: LangSelectCard(
+        languages: languagesAvailable.toList(),
+        title: 'Aggiungi lingua',
+        onLanguageClick: (lang) {
+          final editorMenuState = context.read<EditorMenuBloc>().state;
+          if (editorMenuState is EditorLanguageMenuUpdateStart) {
+            context.read<ArbEditorBloc>().add(
+                  ArbEditorLanguageUpdated(
+                    oldLang: editorMenuState.currentLang,
+                    newLang: lang,
+                  ),
+                );
+          }
+        },
+      ),
+    );
   }
 }

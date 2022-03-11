@@ -49,14 +49,16 @@ class CardHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            child: const Icon(Icons.arrow_back_rounded),
-            onTap: onBack?.call,
+        if (onBack != null) ...[
+          MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              child: const Icon(Icons.arrow_back_rounded),
+              onTap: onBack?.call,
+            ),
           ),
-        ),
-        const SizedBox(width: 10),
+          const SizedBox(width: 10),
+        ],
         Text(
           title,
           style: TextStyle(

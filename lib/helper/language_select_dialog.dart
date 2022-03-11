@@ -12,44 +12,11 @@ Future<String?> showSingleLanguageSelectDialog(
     context: context,
     builder: (context) {
       return Center(
-        child: MainCard.dialog(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CardHeader(
-                title: _dialogTitle,
-                onBack: () => Navigator.pop(context),
-              ),
-              if (languages.isEmpty)
-                SizedBox(
-                  height: 100,
-                  child: Center(
-                    child: Text(
-                      'Nessuna lingua supportata presente',
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
-                  ),
-                )
-              else
-                const SizedBox(height: 15),
-              for (final lang in languages) ...[
-                Material(
-                  color: Colors.transparent,
-                  child: InkWell(
-                    onTap: () => Navigator.pop(context, lang),
-                    child: Padding(
-                      padding: const EdgeInsets.all(15),
-                      child: Text(
-                        lang,
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ),
-                  ),
-                ),
-              ]
-            ],
-          ),
+        child: LangSelectCard(
+          languages: languages,
+          title: _dialogTitle,
+          onBackClick: () => Navigator.pop(context),
+          onLanguageClick: (lang) => Navigator.pop(context, lang),
         ),
       );
     },
