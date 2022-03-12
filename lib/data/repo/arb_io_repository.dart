@@ -79,12 +79,12 @@ class IORepository {
             jsonEncode(arbContentMap).replaceAll("\\\\", '\\');
         final arbContent = Uint8List.fromList(utf8.encode(arbContentText));
 
-        final langReduced = "${lang.split('_').first}.arb";
+        final langReduced = "app_${lang.split('_').first}.arb";
 
         return MapEntry(langReduced, arbContent);
       });
-
-      _ioApi.saveArbFiles(Map.fromEntries(arbFiles), 'arbs.zip');
+      final filename = document.projectName.toLowerCase().replaceAll(' ', '_');
+      _ioApi.saveArbFiles(Map.fromEntries(arbFiles), '${filename}_arbs.zip');
 
       return true;
     } on Exception {
