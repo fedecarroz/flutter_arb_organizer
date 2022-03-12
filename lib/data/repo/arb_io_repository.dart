@@ -51,7 +51,7 @@ class IORepository {
   ArbDocument readArbDocument(File arbDocumentFile) {
     final fileContent = utf8.decode(arbDocumentFile.readAsBytesSync());
     final json = jsonDecode(fileContent);
-    return ArbDocument.fromJson(json);
+    return ArbDocument.fromMap(json);
   }
 
   Map<String, String> readArb(File file) {
@@ -93,7 +93,7 @@ class IORepository {
 
   Future<bool> saveDocument(ArbDocument document) async {
     try {
-      final arbDocJson = document.toJson();
+      final arbDocJson = document.toMap();
       final arbDocContent = utf8.encode(jsonEncode(arbDocJson));
       final arbBytes = Uint8List.fromList(arbDocContent);
 
