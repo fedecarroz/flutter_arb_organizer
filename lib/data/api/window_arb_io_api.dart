@@ -11,6 +11,8 @@ class WindowArbIOApi extends IOApiInterface {
     List<String>? extensionsAllowed,
   }) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
+      dialogTitle: 'Seleziona file',
+      lockParentWindow: true,
       allowMultiple: true,
       type: FileType.custom,
       allowedExtensions:
@@ -33,6 +35,8 @@ class WindowArbIOApi extends IOApiInterface {
 
     final fileSavePath = arbDocPahth ??
         await FilePicker.platform.saveFile(
+          dialogTitle: 'Salva documento',
+          lockParentWindow: true,
           type: FileType.custom,
           allowedExtensions: ['arbdoc'],
           fileName: filename,
@@ -52,6 +56,8 @@ class WindowArbIOApi extends IOApiInterface {
     final zipEncoder = ZipEncoder();
 
     final fileSavePath = await FilePicker.platform.saveFile(
+      dialogTitle: 'Salva archivio',
+      lockParentWindow: true,
       type: FileType.custom,
       allowedExtensions: ['zip'],
       fileName: defaultFileName,
