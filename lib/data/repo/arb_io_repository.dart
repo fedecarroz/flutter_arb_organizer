@@ -51,7 +51,7 @@ class IORepository {
   ArbDocument readArbDocument(File arbDocumentFile) {
     final fileContent = utf8.decode(arbDocumentFile.readAsBytesSync());
     final json = jsonDecode(fileContent);
-    return ArbDocument.fromJson(json);
+    return ArbDocument.fromMap(json);
   }
 
   Map<String, String> readArb(File file) {
@@ -75,15 +75,16 @@ class IORepository {
             entry.localizedValues[lang] ?? '',
           ),
         );
-        final arbContentText = jsonEncode(arbContentMap);
+        final arbContentText =
+            jsonEncode(arbContentMap).replaceAll("\\\\", '\\');
         final arbContent = Uint8List.fromList(utf8.encode(arbContentText));
 
-        final langReduced = "${lang.split('_').first}.arb";
+        final langReduced = "app_${lang.split('_').first}.arb";
 
         return MapEntry(langReduced, arbContent);
       });
-
-      _ioApi.saveArbFiles(Map.fromEntries(arbFiles), 'arbs.zip');
+      final filename = document.projectName.toLowerCase().replaceAll(' ', '_');
+      _ioApi.saveArbFiles(Map.fromEntries(arbFiles), '${filename}_arbs.zip');
 
       return true;
     } on Exception {
@@ -93,7 +94,7 @@ class IORepository {
 
   Future<bool> saveDocument(ArbDocument document) async {
     try {
-      final arbDocJson = document.toJson();
+      final arbDocJson = document.toMap();
       final arbDocContent = utf8.encode(jsonEncode(arbDocJson));
       final arbBytes = Uint8List.fromList(arbDocContent);
 

@@ -23,3 +23,12 @@ class LanguageMenuUpdateClicked extends EditorMenuEvent {
   @override
   List<Object> get props => [currentLang];
 }
+
+class LanguageMenuRemoveClicked extends EditorMenuEvent {
+  final String lang;
+
+  LanguageMenuRemoveClicked(this.lang);
+
+  @override
+  List<Object> get props => [lang];
+}

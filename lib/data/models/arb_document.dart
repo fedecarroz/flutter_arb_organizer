@@ -43,7 +43,7 @@ class ArbDocument extends Equatable {
   Map<String, dynamic> toMap() {
     return {
       'projectName': projectName,
-      'labels': labels,
+      'labels': labels.map((key, arbEntry) => MapEntry(key, arbEntry.toMap())),
       'mainLanguage': mainLanguage,
       'languages': languages.toList(),
       'groups': groups,
@@ -54,7 +54,9 @@ class ArbDocument extends Equatable {
   factory ArbDocument.fromMap(Map<String, dynamic> map) {
     return ArbDocument(
       projectName: map['projectName'] ?? 'new_project',
-      labels: Map<String, ArbEntry>.from(map['labels']),
+      labels: Map<String, dynamic>.from(map['labels']).map(
+        (key, json) => MapEntry(key, ArbEntry.fromMap(json)),
+      ),
       mainLanguage: map['mainLanguage'] ?? 'it_IT',
       languages: Set<String>.from(map['languages']),
       groups: Map<String, String>.from(map['groups']),

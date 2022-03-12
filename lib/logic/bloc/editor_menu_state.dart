@@ -41,3 +41,12 @@ class EditorLanguageMenuUpdateStart extends EditorLanguageMenuState {
   @override
   List<Object> get props => [pageName, currentLang];
 }
+
+class EditorLanguageMenuRemoveStart extends EditorLanguageMenuState {
+  final String lang;
+
+  const EditorLanguageMenuRemoveStart(String pageName, this.lang)
+      : super(pageName);
+  @override
+  List<Object> get props => [pageName, lang];
+}
