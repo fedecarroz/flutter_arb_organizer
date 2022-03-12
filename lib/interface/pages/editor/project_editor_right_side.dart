@@ -214,6 +214,8 @@ class _RightLanguageMenu extends StatelessWidget {
             return const _RightLanguageAddMenu();
           } else if (state is EditorLanguageMenuUpdateStart) {
             return const _RightLanguageUpdateMenu();
+          } else if (state is EditorLanguageMenuRemoveStart) {
+            return const _RightLanguageRemoveMenu();
           } else {
             return Container();
           }
@@ -270,6 +272,76 @@ class _RightLanguageUpdateMenu extends StatelessWidget {
                 );
           }
         },
+      ),
+    );
+  }
+}
+
+class _RightLanguageRemoveMenu extends StatelessWidget {
+  const _RightLanguageRemoveMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: MainCard.dialog(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const CardHeader(
+              title: 'Rimuovi lingua',
+            ),
+            const SizedBox(height: 15),
+            RichText(
+              text: const TextSpan(
+                text: 'Sei sicuro di voler rimuovere la lingua selezionata?'
+                    'Il processo è ',
+                style: TextStyle(
+                  color: Colors.black,
+                ),
+                children: <TextSpan>[
+                  TextSpan(
+                    text: 'irreversibile',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  TextSpan(text: '.')
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: PrimaryButton(
+                      label: 'Conferma',
+                      onPressed: () {
+                        final state = context.read<EditorMenuBloc>().state;
+                        if (state is EditorLanguageMenuRemoveStart) {
+                          context
+                            ..read<ArbEditorBloc>()
+                                .add(ArbEditorLanguageRemoved(state.lang))
+                            ..read<EditorMenuBloc>().add(LanguageMenuClicked());
+                        }
+                      },
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Annulla',
+                      onPressed: () => context
+                          .read<EditorMenuBloc>()
+                          .add(LanguageMenuClicked()),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

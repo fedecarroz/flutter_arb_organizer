@@ -231,12 +231,7 @@ class _LeftLanguageMenu extends StatelessWidget {
     return Column(
       children: [
         for (final lang in arbLangs) ...[
-          _LeftButton(
-            label: lang,
-            onTap: () => context.read<EditorMenuBloc>().add(
-                  LanguageMenuUpdateClicked(lang),
-                ),
-          ),
+          _LeftLangItem(lang: lang),
         ],
         _LeftButton(
           centerText: true,
@@ -253,6 +248,77 @@ class _LeftLanguageMenu extends StatelessWidget {
           onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
         ),
       ],
+    );
+  }
+}
+
+class _LeftLangItem extends StatelessWidget {
+  final MaterialColor baseColor;
+  final bool specialColor;
+  final String lang;
+  final Color textColor;
+
+  const _LeftLangItem({
+    Key? key,
+    this.baseColor = Colors.blue,
+    this.specialColor = false,
+    required this.lang,
+    this.textColor = Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: specialColor ? baseColor[900] : baseColor[700],
+      child: Container(
+        height: 70,
+        padding: const EdgeInsets.only(left: 10),
+        child: Row(
+          children: <Widget>[
+            Expanded(
+              child: Text(
+                lang,
+                style: TextStyle(
+                  color: textColor,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            InkWell(
+              highlightColor: baseColor[900],
+              hoverColor: baseColor[400],
+              splashColor: baseColor[600],
+              onTap: () => context.read<EditorMenuBloc>().add(
+                    LanguageMenuUpdateClicked(lang),
+                  ),
+              child: const SizedBox(
+                height: 70,
+                width: 70,
+                child: Icon(
+                  Icons.edit,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+            InkWell(
+              highlightColor: baseColor[900],
+              hoverColor: baseColor[400],
+              splashColor: baseColor[600],
+              onTap: () => context.read<EditorMenuBloc>().add(
+                    LanguageMenuRemoveClicked(lang),
+                  ),
+              child: const SizedBox(
+                height: 70,
+                width: 70,
+                child: Icon(
+                  Icons.delete_outline,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

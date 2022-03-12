@@ -14,6 +14,7 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     on<LanguageMenuClicked>(_manageLanguageMenuClicked);
     on<LanguageMenuAddClicked>(_manageLanguageMenuAddClicked);
     on<LanguageMenuUpdateClicked>(_manageLanguageMenuUpdateClicked);
+    on<LanguageMenuRemoveClicked>(_manageLanguageMenuRemoveClick);
   }
 
   void _manageMainMenuClicked(
@@ -54,6 +55,17 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
         EditorLanguageMenuUpdateStart(
           'Lingue supportate',
           event.currentLang,
+        ),
+      );
+
+  void _manageLanguageMenuRemoveClick(
+    LanguageMenuRemoveClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(
+        EditorLanguageMenuRemoveStart(
+          'Lingue supportate',
+          event.lang,
         ),
       );
 }
