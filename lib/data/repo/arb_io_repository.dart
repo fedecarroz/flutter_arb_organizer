@@ -61,7 +61,7 @@ class IORepository {
     json.removeWhere((String key, _) => key.startsWith('@'));
 
     return Map<String, String>.from(json).map((key, value) {
-      final newValue = value.replaceAll('\\', '\\\\');
+      final newValue = value.replaceAll('\n', '\\n');
       return MapEntry(key, newValue);
     });
   }
