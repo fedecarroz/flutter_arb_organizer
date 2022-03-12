@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
-
 import 'package:flutter_arb_organizer/data/models.dart';
+
+const currentVersion = '1.0.0';
 
 class ArbDocument extends Equatable {
   final String projectName;
@@ -18,7 +19,7 @@ class ArbDocument extends Equatable {
     required this.mainLanguage,
     required this.languages,
     this.groups = const {},
-    this.version = '1.0.0',
+    this.version = currentVersion,
   });
 
   ArbDocument copyWith({
@@ -57,7 +58,7 @@ class ArbDocument extends Equatable {
       mainLanguage: map['mainLanguage'] ?? '',
       languages: Set<String>.from(map['languages']),
       groups: Map<String, String>.from(map['groups']),
-      version: map['version'] ?? '',
+      version: map['version'] ?? currentVersion,
     );
   }
 
