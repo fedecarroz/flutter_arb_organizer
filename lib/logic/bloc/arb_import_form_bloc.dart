@@ -176,12 +176,12 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
     }
 
     final langSet = state.languages.map((l) => l.lang).toSet();
-    var entries = <String, ArbEntry>{};
+    var labels = <String, ArbEntry>{};
 
     for (var arbFile in state.languages) {
       arbFile.entries.forEach((key, value) {
-        if (entries.containsKey(key)) {
-          entries[key]!.localizedValues[arbFile.lang] = value;
+        if (labels.containsKey(key)) {
+          labels[key]!.localizedValues[arbFile.lang] = value;
         } else {
           final localizedValues = {arbFile.lang: value};
           final langsWithoutValue = {...langSet}..remove(arbFile.lang);
@@ -190,7 +190,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
             localizedValues[lang] = '';
           }
 
-          entries[key] = ArbEntry(
+          labels[key] = ArbEntry(
             key: key,
             localizedValues: localizedValues,
             groupId: '',
@@ -203,6 +203,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
       projectName: state.projectName,
       mainLanguage: state.mainLang,
       languages: state.languages.map((l) => l.lang).toSet(),
+      labels: labels,
     );
 
     emit(
