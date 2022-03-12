@@ -75,7 +75,8 @@ class IORepository {
             entry.localizedValues[lang] ?? '',
           ),
         );
-        final arbContentText = jsonEncode(arbContentMap);
+        final arbContentText =
+            jsonEncode(arbContentMap).replaceAll("\\\\", '\\');
         final arbContent = Uint8List.fromList(utf8.encode(arbContentText));
 
         final langReduced = "${lang.split('_').first}.arb";
