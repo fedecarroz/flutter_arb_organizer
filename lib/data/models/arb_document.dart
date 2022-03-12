@@ -53,9 +53,9 @@ class ArbDocument extends Equatable {
 
   factory ArbDocument.fromMap(Map<String, dynamic> map) {
     return ArbDocument(
-      projectName: map['projectName'] ?? '',
+      projectName: map['projectName'] ?? 'new_project',
       labels: Map<String, ArbEntry>.from(map['labels']),
-      mainLanguage: map['mainLanguage'] ?? '',
+      mainLanguage: map['mainLanguage'] ?? 'it_IT',
       languages: Set<String>.from(map['languages']),
       groups: Map<String, String>.from(map['groups']),
       version: map['version'] ?? currentVersion,
