@@ -55,7 +55,8 @@ class IORepository {
   }
 
   Map<String, String> readArb(File file) {
-    final fileContent = utf8.decode(file.readAsBytesSync());
+    final fileContent =
+        utf8.decode(file.readAsBytesSync()).replaceAll('\n', '\\n');
     final json = Map<String, dynamic>.from(jsonDecode(fileContent));
 
     json.removeWhere((String key, _) => key.startsWith('@'));
