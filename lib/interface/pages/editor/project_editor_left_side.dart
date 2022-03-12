@@ -1,5 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_arb_organizer/interface/widgets.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -77,19 +78,17 @@ class _LeftButton extends StatelessWidget {
         splashColor: baseColor[600],
         onTap: onTap,
         child: Container(
+          alignment: centerText ? Alignment.center : Alignment.centerLeft,
           height: 70,
           width: double.maxFinite,
           padding: centerText
               ? const EdgeInsets.all(0)
               : const EdgeInsets.only(left: 10),
-          child: Align(
-            alignment: centerText ? Alignment.center : Alignment.centerLeft,
-            child: Text(
-              label,
-              style: TextStyle(
-                color: textColor,
-                fontSize: 18,
-              ),
+          child: Text(
+            label,
+            style: TextStyle(
+              color: textColor,
+              fontSize: 18,
             ),
           ),
         ),
@@ -164,6 +163,30 @@ class _LeftAllEntriesMenu extends StatelessWidget {
             _LeftButton(
               label: 'Lingue supportate: ${arbDoc.languages.length}',
               onTap: null,
+            ),
+            _LeftButton(
+              label: 'Aggiungi entry',
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (_) {
+                    return Material(
+                      color: Colors.transparent,
+                      child: Container(
+                        alignment: Alignment.center,
+                        child: NewEntryCard(
+                          arbDoc: arbDoc,
+                          onPressed: (arbEntry) {
+                            context
+                                .read<ArbEditorBloc>()
+                                .add(ArbEditorEntryAdded(arbEntry));
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
             const Expanded(child: SizedBox()),
             _LeftButton(

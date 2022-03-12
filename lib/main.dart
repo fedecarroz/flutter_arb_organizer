@@ -13,7 +13,6 @@ void main() {
   doWhenWindowReady(() {
     appWindow.title = 'Flutter ARB Organizer';
     appWindow.minSize = const Size(1280, 720);
-    appWindow.maximize();
     appWindow.show();
   });
 }

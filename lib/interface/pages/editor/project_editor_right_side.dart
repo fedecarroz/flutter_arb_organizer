@@ -68,7 +68,7 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
     final appLocal = AppLocalizations.of(context)!;
 
     return Column(
-      children: [
+      children: <Widget>[
         Container(
           height: appWindow.titleBarHeight + 20,
           margin: const EdgeInsets.only(right: 10),
@@ -101,88 +101,51 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
             ),
             child: ScrollConfiguration(
               behavior: const CustomScrollBehaviour(),
-              child: GridView.builder(
-                controller: controller,
-                physics: const NeverScrollableScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                itemCount: 20,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 20,
-                  mainAxisExtent: 180,
-                  mainAxisSpacing: 20,
-                ),
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(5),
-                    child: Container(
-                      color: Colors.white,
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text(
-                            'Entry ${index + 1}',
-                            style: TextStyle(
-                              color: Colors.blue[800],
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: <Widget>[
-                              SizedBox(
-                                width: 70,
-                                child: Text(
-                                  'it_IT:',
-                                  style: TextStyle(
-                                    color: Colors.blue[800],
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: 'Inserire testo',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: <Widget>[
-                              SizedBox(
-                                width: 70,
-                                child: Text(
-                                  'en_US:',
-                                  style: TextStyle(
-                                    color: Colors.blue[800],
-                                    fontSize: 18,
-                                  ),
-                                ),
-                              ),
-                              Expanded(
-                                child: TextFormField(
-                                  decoration: const InputDecoration(
-                                    hintText: 'Inserire testo',
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+              child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
+                builder: (context, state) {
+                  final arbDoc = state.document;
+                  return GridView.builder(
+                    controller: controller,
+                    physics: const NeverScrollableScrollPhysics(),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    itemCount: arbDoc.labels.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 20,
+                      mainAxisExtent: (arbDoc.languages.length + 1) * 60,
+                      mainAxisSpacing: 20,
                     ),
+                    shrinkWrap: true,
+                    itemBuilder: (context, index) {
+                      return EntryCard(
+                        arbDoc: state.document,
+                        index: index,
+                        onChanged: (value,language) {
+                          var newLocalizedValues = arbDoc.labels.values
+                              .elementAt(index)
+                              .localizedValues;
+
+                          newLocalizedValues[language] = value;
+
+                          context.read<ArbEditorBloc>().add(
+                                ArbEditorEntryUpdated(
+                                  arbDoc.labels.values
+                                      .elementAt(index)
+                                      .copyWith(
+                                        localizedValues: newLocalizedValues,
+                                      ),
+                                ),
+                              );
+                        },
+                      );
+                    },
                   );
                 },
               ),
             ),
           ),
         ),
+        const SizedBox(height: 20),
       ],
     );
   }
