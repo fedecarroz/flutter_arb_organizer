@@ -93,7 +93,9 @@ class IORepository {
       final arbDocContent = utf8.encode(jsonEncode(arbDocJson));
       final arbBytes = Uint8List.fromList(arbDocContent);
 
-      _ioApi.saveArbDocument('document.arbdoc', arbBytes);
+      final filename = document.projectName.toLowerCase().replaceAll(' ', '_');
+      _ioApi.saveArbDocument('$filename.arbdoc', arbBytes);
+
       return true;
     } on Exception {
       return false;
