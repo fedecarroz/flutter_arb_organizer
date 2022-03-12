@@ -55,12 +55,15 @@ class IORepository {
   }
 
   Map<String, String> readArb(File file) {
-    final fileContent =
-        utf8.decode(file.readAsBytesSync()).replaceAll('\n', '\\n');
+    final fileContent = utf8.decode(file.readAsBytesSync());
     final json = Map<String, dynamic>.from(jsonDecode(fileContent));
 
     json.removeWhere((String key, _) => key.startsWith('@'));
-    return Map<String, String>.from(json);
+
+    return Map<String, String>.from(json).map((key, value) {
+      final newValue = value.replaceAll('\\', '\\\\');
+      return MapEntry(key, newValue);
+    });
   }
 
   Future<bool> saveArbs(ArbDocument document) async {
