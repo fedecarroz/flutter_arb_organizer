@@ -11,6 +11,9 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     on<MainMenuClicked>(_manageMainMenuClicked);
     on<AllEntriesMenuClicked>(_manageAllEntriesMenuClicked);
     on<GroupMenuClicked>(_manageGroupMenuClicked);
+    on<GroupMenuAddClicked>(_manageGroupMenuAddClicked);
+    on<GroupMenuUpdateClicked>(_manageGroupMenuUpdateClicked);
+    on<GroupMenuRemoveClicked>(_manageGroupMenuRemoveClick);
     on<LanguageMenuClicked>(_manageLanguageMenuClicked);
     on<LanguageMenuAddClicked>(_manageLanguageMenuAddClicked);
     on<LanguageMenuUpdateClicked>(_manageLanguageMenuUpdateClicked);
@@ -34,6 +37,24 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     Emitter<EditorMenuState> emit,
   ) =>
       emit(const EditorGroupMenuState('Gestione gruppi'));
+
+  void _manageGroupMenuAddClicked(
+    GroupMenuAddClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(const EditorGroupMenuAddStart('Gestione gruppi'));
+
+  void _manageGroupMenuUpdateClicked(
+    GroupMenuUpdateClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(const EditorGroupMenuUpdateStart('Gestione gruppi'));
+
+  void _manageGroupMenuRemoveClick(
+    GroupMenuRemoveClicked event,
+    Emitter<EditorMenuState> emit,
+  ) =>
+      emit(const EditorGroupMenuRemoveStart('Gestione gruppi'));
 
   void _manageLanguageMenuClicked(
     LanguageMenuClicked event,

@@ -21,6 +21,22 @@ class EditorGroupMenuState extends EditorMenuState {
   const EditorGroupMenuState(String pageName) : super(pageName);
 }
 
+class EditorGroupMenuInitial extends EditorGroupMenuState {
+  const EditorGroupMenuInitial(String pageName) : super(pageName);
+}
+
+class EditorGroupMenuAddStart extends EditorGroupMenuState {
+  const EditorGroupMenuAddStart(String pageName) : super(pageName);
+}
+
+class EditorGroupMenuUpdateStart extends EditorGroupMenuState {
+  const EditorGroupMenuUpdateStart(String pageName) : super(pageName);
+}
+
+class EditorGroupMenuRemoveStart extends EditorGroupMenuState {
+  const EditorGroupMenuRemoveStart(String pageName) : super(pageName);
+}
+
 abstract class EditorLanguageMenuState extends EditorMenuState {
   const EditorLanguageMenuState(String pageName) : super(pageName);
 }

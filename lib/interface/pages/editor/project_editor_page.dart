@@ -1,8 +1,9 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ProjectEditorPage extends StatefulWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);
@@ -39,35 +40,6 @@ class ProjectEditorPageState extends State<ProjectEditorPage> {
               child: RightSide(),
             ),
           ],
-        ),
-      ),
-      floatingActionButton: const _FAB(),
-    );
-  }
-}
-
-class _FAB extends StatelessWidget {
-  const _FAB({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 70,
-      width: 70,
-      child: FittedBox(
-        child: FloatingActionButton(
-          backgroundColor: Colors.blue[800],
-          focusColor: Colors.blue[900],
-          splashColor: Colors.blue[600],
-          hoverColor: Colors.blue[700],
-          onPressed: () {
-            final doc = context.read<ArbEditorBloc>().state.document;
-            context.read<FileIOBloc>().add(FileIOArbDocSaved(doc));
-          },
-          child: const Icon(
-            Icons.save,
-            color: Colors.white,
-          ),
         ),
       ),
     );

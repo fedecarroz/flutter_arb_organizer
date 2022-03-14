@@ -32,24 +32,7 @@ class _RightMainMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Icon(
-          Icons.text_fields,
-          color: Colors.blue[100]!.withOpacity(0.3),
-          size: 250,
-        ),
-        const SizedBox(width: 30),
-        Text(
-          'Flutter ARB Organizer',
-          style: TextStyle(
-            color: Colors.blue[100]!.withOpacity(0.3),
-            fontSize: 50,
-          ),
-        ),
-      ],
-    );
+    return const FlutterArbLogo();
   }
 }
 
@@ -71,10 +54,236 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
       children: <Widget>[
         Container(
           height: appWindow.titleBarHeight + 20,
-          margin: const EdgeInsets.only(right: 10),
-          color: Colors.blue,
+          color: Colors.blue[900],
           alignment: Alignment.topCenter,
         ),
+        Container(
+          color: Colors.blue[900],
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.add,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Aggiungi',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        return Material(
+                          color: Colors.transparent,
+                          child: Container(
+                            alignment: Alignment.center,
+                            child: NewEntryCard(
+                              arbDoc:
+                                  context.watch<ArbEditorBloc>().state.document,
+                              onPressed: (arbEntry) {
+                                context
+                                    .read<ArbEditorBloc>()
+                                    .add(ArbEditorEntryAdded(arbEntry));
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.filter_alt_outlined,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Filtra',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (_) {
+                        final state = context.watch<ArbEditorBloc>().state;
+                        return Center(
+                          child: MainCard(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: <Widget>[
+                                CardHeader(
+                                  title: 'Filtra',
+                                  onBack: () => Navigator.of(context).pop(),
+                                ),
+                                const SizedBox(height: 20),
+                                state.document.groups.isEmpty
+                                    ? const Text(
+                                        'Nessun gruppo trovato',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      )
+                                    : ListView.builder(
+                                        physics:
+                                            const NeverScrollableScrollPhysics(),
+                                        shrinkWrap: true,
+                                        itemCount: state.document.groups.length,
+                                        itemBuilder: (context, index) {
+                                          return Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: <Widget>[
+                                              Text(
+                                                state.document.groups.values
+                                                    .elementAt(index),
+                                              ),
+                                              Checkbox(
+                                                value: false,
+                                                onChanged: (value) {},
+                                              ),
+                                            ],
+                                          );
+                                        },
+                                      )
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.search,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Ricerca',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.label_outline,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Gruppi',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.language,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Lingue',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {},
+                ),
+              ),
+              SizedBox(
+                width: 70,
+                child: EditorButton.widget(
+                  centerText: true,
+                  specialColor: true,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const <Widget>[
+                      Icon(
+                        Icons.save,
+                        color: Colors.white,
+                        size: 30,
+                      ),
+                      Text(
+                        'Salva',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () {
+                    final doc = context.read<ArbEditorBloc>().state.document;
+                    context.read<FileIOBloc>().add(FileIOArbDocSaved(doc));
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 20),
         Expanded(
           child: ImprovedScrolling(
             scrollController: controller,
@@ -120,7 +329,7 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
                       return EntryCard(
                         arbDoc: state.document,
                         index: index,
-                        onChanged: (value,language) {
+                        onChanged: (value, language) {
                           var newLocalizedValues = arbDoc.labels.values
                               .elementAt(index)
                               .localizedValues;
@@ -156,7 +365,105 @@ class _RightGroupMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(); //TODO: implementare
+    return BlocBuilder<EditorMenuBloc, EditorMenuState>(
+      builder: (context, state) {
+        if (state is EditorGroupMenuAddStart) {
+          return _RightGroupAddMenu();
+        } else if (state is EditorGroupMenuUpdateStart) {
+          return const _RightGroupUpdateMenu();
+        } else if (state is EditorGroupMenuRemoveStart) {
+          return const _RightGroupRemoveMenu();
+        } else {
+          return const FlutterArbLogo();
+        }
+      },
+    );
+  }
+}
+
+class _RightGroupAddMenu extends StatelessWidget {
+  final groupNameController = TextEditingController();
+  _RightGroupAddMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: MainCard(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            const CardHeader(
+              title: 'Aggiungi un nuovo gruppo',
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Nome gruppo:',
+                  style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Inserisci il nome del gruppo',
+                    ),
+                    controller: groupNameController,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: SecondaryButton(
+                    label: 'Annulla',
+                    onPressed: () {
+                      groupNameController.clear();
+                      context.read<EditorMenuBloc>().add(GroupMenuClicked());
+                    },
+                  ),
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: PrimaryButton(
+                    label: 'Aggiungi',
+                    onPressed: () {
+                      context
+                        ..read<ArbEditorBloc>().add(
+                            ArbEditorGroupCreated(groupNameController.text))
+                        ..read<EditorMenuBloc>().add(GroupMenuClicked());
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _RightGroupUpdateMenu extends StatelessWidget {
+  const _RightGroupUpdateMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+}
+
+class _RightGroupRemoveMenu extends StatelessWidget {
+  const _RightGroupRemoveMenu({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
 
@@ -180,7 +487,7 @@ class _RightLanguageMenu extends StatelessWidget {
           } else if (state is EditorLanguageMenuRemoveStart) {
             return const _RightLanguageRemoveMenu();
           } else {
-            return Container();
+            return const FlutterArbLogo();
           }
         },
       ),

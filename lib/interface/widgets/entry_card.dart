@@ -26,13 +26,28 @@ class EntryCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Text(
-            arbDoc.labels.keys.elementAt(index),
-            style: TextStyle(
-              color: Colors.blue[800],
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(
+                arbDoc.labels.keys.elementAt(index),
+                style: TextStyle(
+                  color: Colors.blue[800],
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: (){},
+                  child: Icon(
+                    Icons.more_vert,
+                    color: Colors.blue[800],
+                  ),
+                ),
+              ),
+            ],
           ),
           const SizedBox(height: 10),
           for (var language in arbDoc.languages) ...[

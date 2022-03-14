@@ -90,3 +90,62 @@ class SecondaryButton extends StatelessWidget {
     );
   }
 }
+
+class EditorButton extends StatelessWidget {
+  final MaterialColor baseColor;
+  final bool centerText;
+  final bool specialColor;
+  //final String label;
+  final Widget child;
+  final void Function()? onTap;
+  final Color textColor;
+
+  EditorButton({
+    Key? key,
+    this.baseColor = Colors.blue,
+    this.centerText = false,
+    this.specialColor = false,
+    String label = '',
+    required this.onTap,
+    this.textColor = Colors.white,
+  })  : child = Text(
+          label,
+          style: TextStyle(
+            color: textColor,
+            fontSize: 18,
+          ),
+        ),
+        super(key: key);
+
+  const EditorButton.widget({
+    Key? key,
+    this.baseColor = Colors.blue,
+    this.centerText = false,
+    this.specialColor = false,
+    required this.child,
+    required this.onTap,
+    this.textColor = Colors.white,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: specialColor ? baseColor[900] : baseColor[700],
+      child: InkWell(
+        highlightColor: baseColor[900],
+        hoverColor: baseColor[400],
+        splashColor: baseColor[600],
+        onTap: onTap,
+        child: Container(
+          alignment: centerText ? Alignment.center : Alignment.centerLeft,
+          height: 70,
+          width: double.maxFinite,
+          padding: centerText
+              ? const EdgeInsets.all(0)
+              : const EdgeInsets.only(left: 10),
+          child: child,
+        ),
+      ),
+    );
+  }
+}

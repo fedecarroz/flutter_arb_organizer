@@ -11,6 +11,12 @@ class AllEntriesMenuClicked extends EditorMenuEvent {}
 
 class GroupMenuClicked extends EditorMenuEvent {}
 
+class GroupMenuAddClicked extends EditorMenuEvent {}
+
+class GroupMenuUpdateClicked extends EditorMenuEvent {}
+
+class GroupMenuRemoveClicked extends EditorMenuEvent {}
+
 class LanguageMenuClicked extends EditorMenuEvent {}
 
 class LanguageMenuAddClicked extends EditorMenuEvent {}

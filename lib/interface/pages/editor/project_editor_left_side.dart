@@ -50,52 +50,7 @@ class LeftSide extends StatelessWidget {
   }
 }
 
-class _LeftButton extends StatelessWidget {
-  final MaterialColor baseColor;
-  final bool centerText;
-  final bool specialColor;
-  final String label;
-  final void Function()? onTap;
-  final Color textColor;
 
-  const _LeftButton({
-    Key? key,
-    this.baseColor = Colors.blue,
-    this.centerText = false,
-    this.specialColor = false,
-    required this.label,
-    required this.onTap,
-    this.textColor = Colors.white,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: specialColor ? baseColor[900] : baseColor[700],
-      child: InkWell(
-        highlightColor: baseColor[900],
-        hoverColor: baseColor[400],
-        splashColor: baseColor[600],
-        onTap: onTap,
-        child: Container(
-          alignment: centerText ? Alignment.center : Alignment.centerLeft,
-          height: 70,
-          width: double.maxFinite,
-          padding: centerText
-              ? const EdgeInsets.all(0)
-              : const EdgeInsets.only(left: 10),
-          child: Text(
-            label,
-            style: TextStyle(
-              color: textColor,
-              fontSize: 18,
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class _LeftMainMenu extends StatelessWidget {
   const _LeftMainMenu({Key? key}) : super(key: key);
@@ -106,22 +61,22 @@ class _LeftMainMenu extends StatelessWidget {
 
     return Column(
       children: <Widget>[
-        _LeftButton(
+        EditorButton(
           label: 'Etichette e info progetto',
           onTap: () =>
               context.read<EditorMenuBloc>().add(AllEntriesMenuClicked()),
         ),
-        _LeftButton(
+        EditorButton(
           label: 'Gestione gruppi',
           onTap: () => context.read<EditorMenuBloc>().add(GroupMenuClicked()),
         ),
-        _LeftButton(
+        EditorButton(
           label: 'Lingue supportate',
           onTap: () =>
               context.read<EditorMenuBloc>().add(LanguageMenuClicked()),
         ),
         const Expanded(child: SizedBox()),
-        _LeftButton(
+        EditorButton(
           centerText: true,
           specialColor: true,
           label: 'Esporta files .arb',
@@ -148,48 +103,24 @@ class _LeftAllEntriesMenu extends StatelessWidget {
 
         return Column(
           children: <Widget>[
-            _LeftButton(
+            EditorButton(
               label: 'Nome progetto: ${arbDoc.projectName}',
               onTap: null,
             ),
-            _LeftButton(
+            EditorButton(
               label: 'Totale stringhe localizzate: ${arbDoc.labels.length}',
               onTap: null,
             ),
-            _LeftButton(
+            EditorButton(
               label: 'Gruppi creati: ${arbDoc.groups.length}',
               onTap: null,
             ),
-            _LeftButton(
+            EditorButton(
               label: 'Lingue supportate: ${arbDoc.languages.length}',
               onTap: null,
             ),
-            _LeftButton(
-              label: 'Aggiungi entry',
-              onTap: () {
-                showDialog(
-                  context: context,
-                  builder: (_) {
-                    return Material(
-                      color: Colors.transparent,
-                      child: Container(
-                        alignment: Alignment.center,
-                        child: NewEntryCard(
-                          arbDoc: arbDoc,
-                          onPressed: (arbEntry) {
-                            context
-                                .read<ArbEditorBloc>()
-                                .add(ArbEditorEntryAdded(arbEntry));
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
             const Expanded(child: SizedBox()),
-            _LeftButton(
+            EditorButton(
               centerText: true,
               specialColor: true,
               label: 'Indietro',
@@ -219,7 +150,7 @@ class _LeftGroupMenu extends StatelessWidget {
               shrinkWrap: true,
               itemCount: state.document.groups.length,
               itemBuilder: (context, index) {
-                return _LeftButton(
+                return EditorButton(
                   label: state.document.groups.values.elementAt(index),
                   onTap: () {},
                 );
@@ -227,13 +158,14 @@ class _LeftGroupMenu extends StatelessWidget {
             );
           },
         ),
-        _LeftButton(
+        EditorButton(
           centerText: true,
           label: '+',
-          onTap: () {},
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(GroupMenuAddClicked()),
         ),
         const Expanded(child: SizedBox()),
-        _LeftButton(
+        EditorButton(
           centerText: true,
           specialColor: true,
           label: 'Indietro',
@@ -256,15 +188,14 @@ class _LeftLanguageMenu extends StatelessWidget {
         for (final lang in arbLangs) ...[
           _LeftLangItem(lang: lang),
         ],
-        _LeftButton(
+        EditorButton(
           centerText: true,
           label: '+',
-          onTap: () => context.read<EditorMenuBloc>().add(
-                LanguageMenuAddClicked(),
-              ),
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(LanguageMenuAddClicked()),
         ),
         const Expanded(child: SizedBox()),
-        _LeftButton(
+        EditorButton(
           centerText: true,
           specialColor: true,
           label: 'Indietro',
