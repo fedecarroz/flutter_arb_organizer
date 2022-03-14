@@ -181,7 +181,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
                   ),
                 ],
               ),
-              onTap: () {},
+              onTap: () =>
+                  context.read<EditorMenuBloc>().add(GroupMenuClicked()),
             ),
           ),
           SizedBox(
@@ -205,7 +206,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
                   ),
                 ],
               ),
-              onTap: () {},
+              onTap: () =>
+                  context.read<EditorMenuBloc>().add(LanguageMenuClicked()),
             ),
           ),
           SizedBox(

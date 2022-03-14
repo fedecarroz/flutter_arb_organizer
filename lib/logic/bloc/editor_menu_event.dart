@@ -5,8 +5,6 @@ abstract class EditorMenuEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class MainMenuClicked extends EditorMenuEvent {}
-
 class AllEntriesMenuClicked extends EditorMenuEvent {}
 
 class GroupMenuClicked extends EditorMenuEvent {}

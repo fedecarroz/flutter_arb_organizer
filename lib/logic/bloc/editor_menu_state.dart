@@ -9,10 +9,6 @@ abstract class EditorMenuState extends Equatable {
   List<Object> get props => [pageName];
 }
 
-class EditorMainMenuState extends EditorMenuState {
-  const EditorMainMenuState(String pageName) : super(pageName);
-}
-
 class EditorAllEntriesMenuState extends EditorMenuState {
   const EditorAllEntriesMenuState(String pageName) : super(pageName);
 }

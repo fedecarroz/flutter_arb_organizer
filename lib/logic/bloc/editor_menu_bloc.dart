@@ -7,8 +7,8 @@ part 'editor_menu_state.dart';
 class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
   final String projectName;
 
-  EditorMenuBloc(this.projectName) : super(EditorMainMenuState(projectName)) {
-    on<MainMenuClicked>(_manageMainMenuClicked);
+  EditorMenuBloc(this.projectName)
+      : super(EditorAllEntriesMenuState(projectName)) {
     on<AllEntriesMenuClicked>(_manageAllEntriesMenuClicked);
     on<GroupMenuClicked>(_manageGroupMenuClicked);
     on<GroupMenuAddClicked>(_manageGroupMenuAddClicked);
@@ -19,12 +19,6 @@ class EditorMenuBloc extends Bloc<EditorMenuEvent, EditorMenuState> {
     on<LanguageMenuUpdateClicked>(_manageLanguageMenuUpdateClicked);
     on<LanguageMenuRemoveClicked>(_manageLanguageMenuRemoveClick);
   }
-
-  void _manageMainMenuClicked(
-    MainMenuClicked event,
-    Emitter<EditorMenuState> emit,
-  ) =>
-      emit(EditorMainMenuState(projectName));
 
   void _manageAllEntriesMenuClicked(
     AllEntriesMenuClicked event,

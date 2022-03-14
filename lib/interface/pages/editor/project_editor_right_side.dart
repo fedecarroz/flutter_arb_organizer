@@ -15,24 +15,13 @@ class RightSide extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<EditorMenuBloc, EditorMenuState>(
       builder: (context, state) {
-        return state is EditorMainMenuState
-            ? const _RightMainMenu()
-            : state is EditorAllEntriesMenuState
-                ? const _RightAllEntriesMenu()
-                : state is EditorGroupMenuState
-                    ? const _RightGroupMenu()
-                    : const _RightLanguageMenu();
+        return state is EditorAllEntriesMenuState
+            ? const _RightAllEntriesMenu()
+            : state is EditorGroupMenuState
+                ? const _RightGroupMenu()
+                : const _RightLanguageMenu();
       },
     );
-  }
-}
-
-class _RightMainMenu extends StatelessWidget {
-  const _RightMainMenu({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return const FlutterArbLogo();
   }
 }
 
@@ -57,7 +46,7 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
           color: Colors.blue[900],
           alignment: Alignment.topCenter,
         ),
-        EditorToolbar(),
+        const EditorToolbar(),
         const SizedBox(height: 20),
         Expanded(
           child: ImprovedScrolling(

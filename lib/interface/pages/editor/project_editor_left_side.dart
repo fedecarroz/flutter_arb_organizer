@@ -34,58 +34,16 @@ class LeftSide extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               Expanded(
-                child: state is EditorMainMenuState
-                    ? const _LeftMainMenu()
-                    : state is EditorAllEntriesMenuState
-                        ? const _LeftAllEntriesMenu()
-                        : state is EditorGroupMenuState
-                            ? const _LeftGroupMenu()
-                            : const _LeftLanguageMenu(),
+                child: state is EditorAllEntriesMenuState
+                    ? const _LeftAllEntriesMenu()
+                    : state is EditorGroupMenuState
+                        ? const _LeftGroupMenu()
+                        : const _LeftLanguageMenu(),
               ),
             ],
           );
         },
       ),
-    );
-  }
-}
-
-
-
-class _LeftMainMenu extends StatelessWidget {
-  const _LeftMainMenu({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    final appLocal = AppLocalizations.of(context)!;
-
-    return Column(
-      children: <Widget>[
-        EditorButton(
-          label: 'Etichette e info progetto',
-          onTap: () =>
-              context.read<EditorMenuBloc>().add(AllEntriesMenuClicked()),
-        ),
-        EditorButton(
-          label: 'Gestione gruppi',
-          onTap: () => context.read<EditorMenuBloc>().add(GroupMenuClicked()),
-        ),
-        EditorButton(
-          label: 'Lingue supportate',
-          onTap: () =>
-              context.read<EditorMenuBloc>().add(LanguageMenuClicked()),
-        ),
-        const Expanded(child: SizedBox()),
-        EditorButton(
-          centerText: true,
-          specialColor: true,
-          label: 'Esporta files .arb',
-          onTap: () {
-            final doc = context.read<ArbEditorBloc>().state.document;
-            context.read<FileIOBloc>().add(FileIOArbsSaved(doc));
-          },
-        ),
-      ],
     );
   }
 }
@@ -118,14 +76,6 @@ class _LeftAllEntriesMenu extends StatelessWidget {
             EditorButton(
               label: 'Lingue supportate: ${arbDoc.languages.length}',
               onTap: null,
-            ),
-            const Expanded(child: SizedBox()),
-            EditorButton(
-              centerText: true,
-              specialColor: true,
-              label: 'Indietro',
-              onTap: () =>
-                  context.read<EditorMenuBloc>().add(MainMenuClicked()),
             ),
           ],
         );
@@ -169,7 +119,8 @@ class _LeftGroupMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Indietro',
-          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(AllEntriesMenuClicked()),
         ),
       ],
     );
@@ -199,7 +150,8 @@ class _LeftLanguageMenu extends StatelessWidget {
           centerText: true,
           specialColor: true,
           label: 'Indietro',
-          onTap: () => context.read<EditorMenuBloc>().add(MainMenuClicked()),
+          onTap: () =>
+              context.read<EditorMenuBloc>().add(AllEntriesMenuClicked()),
         ),
       ],
     );
