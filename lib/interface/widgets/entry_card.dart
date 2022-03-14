@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/data.dart';
 import 'package:flutter_arb_organizer/interface/widgets/buttons.dart';
+import 'package:flutter_arb_organizer/interface/widgets/card.dart';
 
 class EntryCard extends StatelessWidget {
   final ArbDocument arbDoc;
@@ -137,28 +138,28 @@ class _NewEntryCardState extends State<NewEntryCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
-      ),
-      width: 400,
-      padding: const EdgeInsets.all(20),
+    return MainCard(
+      width: 500,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          const CardHeader(
+            title: 'Aggiungi nuova entry',
+          ),
+          const SizedBox(height: 20),
           Row(
             children: <Widget>[
-              Text(
-                'Chiave:',
-                style: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              SizedBox(
+                width: 80,
+                child: Text(
+                  'Chiave:',
+                  style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 18,
+                  ),
                 ),
               ),
-              const SizedBox(width: 20),
               Expanded(
                 child: TextFormField(
                   decoration: const InputDecoration(
@@ -178,7 +179,7 @@ class _NewEntryCardState extends State<NewEntryCard> {
             Row(
               children: <Widget>[
                 SizedBox(
-                  width: 70,
+                  width: 80,
                   child: Text(
                     '$language:',
                     style: TextStyle(
@@ -208,7 +209,7 @@ class _NewEntryCardState extends State<NewEntryCard> {
 
           //TODO: Sezione scelta gruppo
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
           Row(
             children: <Widget>[
               Expanded(
