@@ -1,3 +1,4 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/data.dart';
 import 'package:flutter_arb_organizer/interface/widgets/buttons.dart';
@@ -38,13 +39,44 @@ class EntryCard extends StatelessWidget {
                 ),
               ),
               MouseRegion(
-                cursor: SystemMouseCursors.click,
-                child: GestureDetector(
-                  onTap: (){},
-                  child: Icon(
+                child: PopupMenuButton(
+                  itemBuilder: (context) {
+                    return <PopupMenuItem>[
+                      PopupMenuItem(
+                        child: Row(
+                          children: const <Widget>[
+                            Icon(Icons.edit),
+                            SizedBox(width: 10),
+                            Text('Rinomina'),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: Row(
+                          children: const <Widget>[
+                            Icon(Icons.label),
+                            SizedBox(width: 10),
+                            Text('Imposta gruppo'),
+                          ],
+                        ),
+                      ),
+                      PopupMenuItem(
+                        child: Row(
+                          children: const <Widget>[
+                            Icon(Icons.delete),
+                            SizedBox(width: 10),
+                            Text('Elimina'),
+                          ],
+                        ),
+                      ),
+                    ];
+                  },
+                  icon: Icon(
                     Icons.more_vert,
                     color: Colors.blue[800],
                   ),
+                  elevation: 6,
+                  tooltip: 'Modifica',
                 ),
               ),
             ],
@@ -78,7 +110,7 @@ class EntryCard extends StatelessWidget {
             ),
             language == arbDoc.languages.last
                 ? const SizedBox()
-                : const SizedBox(height: 10),
+                : const SizedBox(height: 12),
           ],
         ],
       ),

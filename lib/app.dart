@@ -1,5 +1,4 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:context_menus/context_menus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -29,17 +28,15 @@ class _AppState extends State<App> {
       create: (context) => FileIOBloc(),
       child: MaterialApp(
         builder: (context, child) {
-          return ContextMenuOverlay(
-            child: Container(
-              decoration: const BoxDecoration(
-                color: Colors.transparent,
-              ),
-              child: Stack(
-                children: <Widget>[
-                  child!,
-                  const _TitleBar(),
-                ],
-              ),
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.transparent,
+            ),
+            child: Stack(
+              children: <Widget>[
+                child!,
+                const _TitleBar(),
+              ],
             ),
           );
         },

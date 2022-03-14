@@ -85,7 +85,7 @@ class _RightAllEntriesMenuState extends State<_RightAllEntriesMenu> {
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
                       crossAxisSpacing: 20,
-                      mainAxisExtent: (arbDoc.languages.length + 1) * 60,
+                      mainAxisExtent: 80 + (arbDoc.languages.length * 60),
                       mainAxisSpacing: 20,
                     ),
                     shrinkWrap: true,
