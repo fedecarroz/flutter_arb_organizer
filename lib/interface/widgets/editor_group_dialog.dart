@@ -60,7 +60,10 @@ class _GroupListDialog extends StatelessWidget {
                           Row(
                             children: <Widget>[
                               IconButton(
-                                onPressed: () {},
+                                onPressed: () => showEditorGroupEditDialog(
+                                  context,
+                                  group,
+                                ),
                                 icon: const Icon(Icons.edit),
                               ),
                               IconButton(
@@ -158,23 +161,88 @@ class _GroupAddDialog extends StatelessWidget {
   }
 }
 
-Future<void> showEditorGroupEditDialog(BuildContext context) {
+Future<void> showEditorGroupEditDialog(
+  BuildContext context,
+  MapEntry<String, String> groupEntry,
+) {
   final editoBloc = context.read<ArbEditorBloc>();
   return showDialog(
     context: context,
     builder: (context) => BlocProvider.value(
       value: editoBloc,
-      child: const _GroupEditDialog(),
+      child: _GroupEditDialog(
+        groupId: groupEntry.key,
+        groupName: groupEntry.value,
+      ),
     ),
   );
 }
 
 class _GroupEditDialog extends StatelessWidget {
-  const _GroupEditDialog({Key? key}) : super(key: key);
+  final String groupId;
+  final String groupName;
+  final groupNameController = TextEditingController();
+
+  _GroupEditDialog({
+    Key? key,
+    required this.groupId,
+    required this.groupName,
+  }) : super(key: key) {
+    groupNameController.text = groupName;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: MainCard(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            CardHeader(
+              title: 'Modifica gruppo',
+              onBack: () {
+                groupNameController.clear();
+                Navigator.of(context).pop();
+              },
+            ),
+            const SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                Text(
+                  'Nome gruppo:',
+                  style: TextStyle(
+                    color: Colors.blue[800],
+                    fontSize: 18,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextFormField(
+                    decoration: const InputDecoration(
+                      hintText: 'Inserisci il nome del gruppo',
+                    ),
+                    controller: groupNameController,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            PrimaryButton(
+              label: 'Aggiorna gruppo',
+              onPressed: () {
+                context.read<ArbEditorBloc>().add(
+                      ArbEditorGroupNameUpdated(
+                        groupId: groupId,
+                        groupName: groupNameController.text,
+                      ),
+                    );
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -212,8 +280,9 @@ class _GroupRemoveDialogState extends State<_GroupRemoveDialog> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const CardHeader(
+            CardHeader(
               title: 'Rimuovi gruppo',
+              onBack: () => Navigator.pop(context),
             ),
             const SizedBox(height: 15),
             RichText(
@@ -237,7 +306,29 @@ class _GroupRemoveDialogState extends State<_GroupRemoveDialog> {
             Padding(
               padding: const EdgeInsets.only(top: 15),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
+                  const Text('Cancella anche le etichette'),
+                  Checkbox(
+                    value: removeGroupLabels,
+                    onChanged: (v) => setState(
+                      () => removeGroupLabels = v ?? false,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 15),
+              child: Row(
+                children: <Widget>[
+                  Expanded(
+                    child: SecondaryButton(
+                      label: 'Annulla',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
                   Expanded(
                     child: PrimaryButton(
                       label: 'Conferma',
@@ -250,13 +341,6 @@ class _GroupRemoveDialogState extends State<_GroupRemoveDialog> {
                         );
                         Navigator.pop(context);
                       },
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: SecondaryButton(
-                      label: 'Annulla',
-                      onPressed: () => Navigator.pop(context),
                     ),
                   ),
                 ],
