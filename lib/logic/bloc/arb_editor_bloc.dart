@@ -49,10 +49,25 @@ class ArbEditorBloc extends Bloc<ArbEditorEvent, ArbEditorState> {
   ) {
     emit(ArbEditorDocumentUpdateInProgress(state.document));
 
-    final labels = state.document.labels;
+    final _keys = state.document.labels.keys.toList();
+    final _values = state.document.labels.values.toList();
 
-    if (labels.containsKey(event.arbEntry.key)) {
-      labels[event.arbEntry.key] = event.arbEntry;
+    final index = _keys.indexOf(event.arbEntry.key);
+
+    if (_keys.contains(event.arbEntry.key)) {
+      if (event.newKey != null) {
+        if (!_keys.contains(event.newKey)) {
+          _keys[index] = event.newKey!;
+          _values[index] = event.arbEntry.copyWith(key: event.newKey);
+        } else {
+          return emit(ArbEditorDocumentUpdateFailure(state.document));
+        }
+      } else {
+        _values[index] = event.arbEntry;
+      }
+
+      final labels = Map.fromIterables(_keys, _values);
+
       emit(
         ArbEditorDocumentUpdateSuccess(
           state.document.copyWith(

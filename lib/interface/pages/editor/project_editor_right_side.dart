@@ -75,7 +75,7 @@ class RightSide extends StatelessWidget {
 
                         return EntryCard(
                           entry: entry,
-                          languages: arbDoc.languages,
+                          arbDoc: arbDoc,
                           onChanged: (value, language) {
                             var newLocalizedValues = entry.localizedValues;
 
@@ -112,8 +112,6 @@ void _listenerIO(
     showDialog(
       context: context,
       builder: (_) {
-        Future.delayed(const Duration(seconds: 2))
-            .then((_) => Navigator.pop(context));
         return Center(
           child: MainCard(
             width: 200,
@@ -136,9 +134,6 @@ void _listenerIO(
     showDialog(
       context: context,
       builder: (_) {
-        Future.delayed(const Duration(seconds: 2))
-            .then((_) => Navigator.pop(context));
-
         return Center(
           child: MainCard(
             width: 250,

@@ -18,8 +18,9 @@ class ArbEditorEntryAdded extends ArbEditorEvent {
 
 class ArbEditorEntryUpdated extends ArbEditorEvent {
   final ArbEntry arbEntry;
+  final String? newKey;
 
-  const ArbEditorEntryUpdated(this.arbEntry);
+  const ArbEditorEntryUpdated(this.arbEntry, {this.newKey});
 
   @override
   List<Object?> get props => [arbEntry];

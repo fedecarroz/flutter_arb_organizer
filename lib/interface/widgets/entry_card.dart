@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/data.dart';
-import 'package:flutter_arb_organizer/interface/widgets/buttons.dart';
-import 'package:flutter_arb_organizer/interface/widgets/card.dart';
+import 'package:flutter_arb_organizer/interface/widgets.dart';
 
 class EntryCard extends StatelessWidget {
+  final ArbDocument arbDoc;
   final ArbEntry entry;
-  final Set<String> languages;
   final void Function(String text, String language) onChanged;
 
   const EntryCard({
     Key? key,
+    required this.arbDoc,
     required this.entry,
-    required this.languages,
     required this.onChanged,
   }) : super(key: key);
 
@@ -30,17 +29,43 @@ class EntryCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(
-                entry.key,
-                style: TextStyle(
-                  color: Colors.blue[800],
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                children: <Widget>[
+                  Text(
+                    entry.key,
+                    style: TextStyle(
+                      color: Colors.blue[800],
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: arbDoc.groups[entry.key] == null
+                          ? Colors.grey
+                          : Colors.blue[800],
+                      borderRadius: BorderRadius.circular(6),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 3,
+                    ),
+                    child: Center(
+                      child: Text(
+                        arbDoc.groups[entry.key] ?? 'Nessun gruppo',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               MouseRegion(
                 child: PopupMenuButton(
-                  itemBuilder: (context) {
+                  itemBuilder: (_) {
                     return <PopupMenuItem>[
                       PopupMenuItem(
                         child: Row(
@@ -49,6 +74,9 @@ class EntryCard extends StatelessWidget {
                             SizedBox(width: 10),
                             Text('Rinomina'),
                           ],
+                        ),
+                        onTap: () => Future(
+                          () => showRenameDialog(context, entry),
                         ),
                       ),
                       PopupMenuItem(
@@ -59,6 +87,9 @@ class EntryCard extends StatelessWidget {
                             Text('Imposta gruppo'),
                           ],
                         ),
+                        onTap: () => Future(
+                          () => showSetGroupDialog(context, entry),
+                        ),
                       ),
                       PopupMenuItem(
                         child: Row(
@@ -67,6 +98,9 @@ class EntryCard extends StatelessWidget {
                             SizedBox(width: 10),
                             Text('Elimina'),
                           ],
+                        ),
+                        onTap: () => Future(
+                          () => showDeleteEntryDialog(context, entry),
                         ),
                       ),
                     ];
@@ -82,7 +116,7 @@ class EntryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          for (var language in languages) ...[
+          for (var language in arbDoc.languages) ...[
             Row(
               children: <Widget>[
                 SizedBox(
@@ -106,7 +140,7 @@ class EntryCard extends StatelessWidget {
                 ),
               ],
             ),
-            language == languages.last
+            language == arbDoc.languages.last
                 ? const SizedBox()
                 : const SizedBox(height: 12),
           ],
