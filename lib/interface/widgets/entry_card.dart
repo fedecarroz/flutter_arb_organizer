@@ -167,6 +167,7 @@ class NewEntryCard extends StatefulWidget {
 class _NewEntryCardState extends State<NewEntryCard> {
   String key = '';
   Map<String, String> values = {};
+  String dropdownValue = '';
 
   @override
   Widget build(BuildContext context) {
@@ -209,6 +210,51 @@ class _NewEntryCardState extends State<NewEntryCard> {
               ],
             ),
             const SizedBox(height: 10),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  width: 80,
+                  child: Text(
+                    'Gruppo:',
+                    style: TextStyle(
+                      color: Colors.blue[800],
+                      fontSize: 18,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: DropdownButton<String>(
+                    items: [
+                      DropdownMenuItem(
+                          child: const Text('Nessun gruppo'),
+                          value: '',
+                          onTap: () {
+                            setState(() {
+                              dropdownValue = '';
+                            });
+                          },
+                        ),
+                      ...widget.arbDoc.groups.entries.map(
+                        (e) => DropdownMenuItem(
+                          child: Text(e.value),
+                          value: e.key,
+                          onTap: () {
+                            setState(() {
+                              dropdownValue = e.key;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                    value: dropdownValue,
+                    isExpanded: true,
+                    focusColor: Colors.transparent,
+                    onChanged: (_) {},
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
             for (var language in widget.arbDoc.languages) ...[
               Row(
                 children: <Widget>[
@@ -240,9 +286,6 @@ class _NewEntryCardState extends State<NewEntryCard> {
                   ? const SizedBox()
                   : const SizedBox(height: 10),
             ],
-
-            //TODO: Sezione scelta gruppo
-
             const SizedBox(height: 30),
             PrimaryButton(
               label: 'Aggiungi',
@@ -250,7 +293,7 @@ class _NewEntryCardState extends State<NewEntryCard> {
                 final entry = ArbEntry(
                   key: key,
                   localizedValues: values,
-                  groupId: '', //TODO: gruppo
+                  groupId: dropdownValue,
                 );
 
                 widget.onPressed?.call(entry);
