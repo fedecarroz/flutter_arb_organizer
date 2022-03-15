@@ -42,7 +42,7 @@ class EntryCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: arbDoc.groups[entry.key] == null
+                      color: arbDoc.groups[entry.groupId] == null
                           ? Colors.grey
                           : Colors.blue[800],
                       borderRadius: BorderRadius.circular(6),
@@ -53,7 +53,7 @@ class EntryCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        arbDoc.groups[entry.key] ?? 'Nessun gruppo',
+                        arbDoc.groups[entry.groupId] ?? 'Nessun gruppo',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,

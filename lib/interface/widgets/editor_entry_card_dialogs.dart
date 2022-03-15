@@ -81,11 +81,14 @@ class _RenameDialog extends StatelessWidget {
 Future<void> showSetGroupDialog(BuildContext context, ArbEntry arbEntry) {
   return showDialog<void>(
     context: context,
-    builder: (context) => _SetGroupDialog(arbEntry: arbEntry),
+    builder: (_) => BlocProvider.value(
+      value: context.read<ArbEditorBloc>(),
+      child: _SetGroupDialog(arbEntry: arbEntry),
+    ),
   );
 }
 
-class _SetGroupDialog extends StatelessWidget {
+class _SetGroupDialog extends StatefulWidget {
   final ArbEntry arbEntry;
 
   const _SetGroupDialog({
@@ -94,7 +97,22 @@ class _SetGroupDialog extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<_SetGroupDialog> createState() => _SetGroupDialogState();
+}
+
+class _SetGroupDialogState extends State<_SetGroupDialog> {
+  String? selectedGroup;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedGroup = widget.arbEntry.groupId;
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final state = context.watch<ArbEditorBloc>().state;
+
     return Center(
       child: MainCard(
         child: Column(
@@ -105,11 +123,44 @@ class _SetGroupDialog extends StatelessWidget {
               onBack: () => Navigator.of(context).pop(),
             ),
             const SizedBox(height: 20),
-            //TODO: interfaccia dai filtri con radio
+            ListView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              itemCount: state.document.groups.length,
+              itemBuilder: (context, index) {
+                final groupEntry =
+                    state.document.groups.entries.elementAt(index);
+
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(groupEntry.value),
+                    Radio<String>(
+                      value: groupEntry.key,
+                      groupValue: selectedGroup,
+                      onChanged: (value) {
+                        setState(() {
+                          selectedGroup = value;
+                        });
+                      },
+                      toggleable: true,
+                    ),
+                  ],
+                );
+              },
+            ),
             const SizedBox(height: 20),
             PrimaryButton(
               label: 'Imposta',
-              onPressed: () {}, //TODO: collega la logica
+              onPressed: () {
+                context.read<ArbEditorBloc>().add(
+                      ArbEditorGroupEntryAdded(
+                        arbEntry: widget.arbEntry,
+                        groupId: selectedGroup ?? '',
+                      ),
+                    );
+                Navigator.of(context).pop();
+              },
             ),
           ],
         ),
@@ -121,7 +172,10 @@ class _SetGroupDialog extends StatelessWidget {
 Future<void> showDeleteEntryDialog(BuildContext context, ArbEntry arbEntry) {
   return showDialog<void>(
     context: context,
-    builder: (context) => _DeleteEntryDialog(arbEntry: arbEntry),
+    builder: (_) => BlocProvider.value(
+      value: context.read<ArbEditorBloc>(),
+      child: _DeleteEntryDialog(arbEntry: arbEntry),
+    ),
   );
 }
 
@@ -180,7 +234,9 @@ class _DeleteEntryDialog extends StatelessWidget {
                   child: PrimaryButton(
                     label: 'Conferma',
                     onPressed: () {
-                      //TODO: implementa logica
+                      context
+                          .read<ArbEditorBloc>()
+                          .add(ArbEditorEntryRemoved(arbEntry));
                       Navigator.of(context).pop();
                     },
                   ),
