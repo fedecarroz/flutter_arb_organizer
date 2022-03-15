@@ -5,6 +5,8 @@ import 'package:flutter_arb_organizer/data/models.dart';
 
 const currentVersion = '1.0.0';
 
+const defaultGroupKey = '__default__';
+
 class ArbDocument extends Equatable {
   final String projectName;
   final Map<String, ArbEntry> labels;

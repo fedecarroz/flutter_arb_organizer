@@ -45,6 +45,11 @@ class _FilterDialogState extends State<_FilterDialog> {
   Widget build(BuildContext context) {
     final state = context.watch<ArbEditorBloc>().state;
 
+    final groups = Map.fromEntries([
+      const MapEntry('', 'Nessun Gruppo'),
+      ...state.document.groups.entries,
+    ]);
+
     return Center(
       child: MainCard(
         child: Column(
@@ -58,10 +63,9 @@ class _FilterDialogState extends State<_FilterDialog> {
             ListView.builder(
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: state.document.groups.length,
+              itemCount: groups.length,
               itemBuilder: (context, index) {
-                final groupEntry =
-                    state.document.groups.entries.elementAt(index);
+                final groupEntry = groups.entries.elementAt(index);
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
