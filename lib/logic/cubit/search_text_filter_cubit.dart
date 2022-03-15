@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter_arb_organizer/data.dart';
 
 part 'search_text_filter_state.dart';
 

@@ -54,15 +54,15 @@ class RightSide extends StatelessWidget {
                 child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
                   builder: (context, state) {
                     final arbDoc = state.document;
-                    final searchText = context.watch<FilterCubit>().state.text;
-                    final filteredLanguages = Map.of(arbDoc.labels)
-                      ..removeWhere((key, _) => !key.startsWith(searchText));
+                    final filterState = context.watch<FilterCubit>().state;
+                    final filteredLabels =
+                        filterState.filterLabels(arbDoc.labels);
 
                     return GridView.builder(
                       controller: controller,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: filteredLanguages.length,
+                      itemCount: filteredLabels.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 20,
@@ -71,7 +71,7 @@ class RightSide extends StatelessWidget {
                       ),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        final entry = filteredLanguages.values.elementAt(index);
+                        final entry = filteredLabels.values.elementAt(index);
 
                         return EntryCard(
                           entry: entry,

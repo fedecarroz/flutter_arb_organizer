@@ -24,6 +24,22 @@ class FilterState extends Equatable {
     );
   }
 
+  Map<String, ArbEntry> filterLabels(Map<String, ArbEntry> input) {
+    final output = Map.of(input);
+
+    if (text.isNotEmpty) {
+      output.removeWhere((key, _) => !key.startsWith(text));
+    }
+
+    if (groupIdsSelected.isNotEmpty) {
+      output.removeWhere(
+        (_, entry) => !groupIdsSelected.contains(entry.groupId),
+      );
+    }
+
+    return output;
+  }
+
   @override
   List<Object?> get props => [text, groupIdsSelected];
 }
