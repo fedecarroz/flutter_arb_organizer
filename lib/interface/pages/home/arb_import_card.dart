@@ -12,7 +12,7 @@ class _ArbImportCard extends StatelessWidget {
             context,
             projectEditorRoute,
             arguments: state.document,
-          );
+          ).then((_) => resetHomeBlocs(context));
         }
       },
       child: MainCard(

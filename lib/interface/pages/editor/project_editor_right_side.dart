@@ -54,8 +54,7 @@ class RightSide extends StatelessWidget {
                 child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
                   builder: (context, state) {
                     final arbDoc = state.document;
-                    final searchText =
-                        context.watch<SearchTextFilterCubit>().state.text;
+                    final searchText = context.watch<FilterCubit>().state.text;
                     final filteredLanguages = Map.of(arbDoc.labels)
                       ..removeWhere((key, _) => !key.startsWith(searchText));
 

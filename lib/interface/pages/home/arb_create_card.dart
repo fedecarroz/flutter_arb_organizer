@@ -12,7 +12,7 @@ class _ArbCreateCard extends StatelessWidget {
             context,
             projectEditorRoute,
             arguments: state.arbDocument,
-          );
+          ).then((_) => resetHomeBlocs(context));
         }
       },
       child: MainCard(
