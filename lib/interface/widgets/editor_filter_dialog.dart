@@ -33,7 +33,7 @@ class _FilterDialog extends StatefulWidget {
 }
 
 class _FilterDialogState extends State<_FilterDialog> {
-  late final Set<String> groupIdSelected;
+  late Set<String> groupIdSelected;
 
   @override
   void initState() {
@@ -55,9 +55,20 @@ class _FilterDialogState extends State<_FilterDialog> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            CardHeader(
-              title: 'Filtra',
-              onBack: () => Navigator.of(context).pop(),
+            Row(
+              children: [
+                Expanded(
+                  child: CardHeader(
+                    title: 'Filtra',
+                    onBack: () => Navigator.of(context).pop(),
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => setState(() => groupIdSelected = {}),
+                  icon: const Icon(Icons.close),
+                  tooltip: "Resetta filtri",
+                )
+              ],
             ),
             const SizedBox(height: 20),
             ListView.builder(
