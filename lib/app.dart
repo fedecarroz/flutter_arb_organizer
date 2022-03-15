@@ -26,25 +26,28 @@ class _AppState extends State<App> {
   Widget build(BuildContext context) {
     return BlocProvider<FileIOBloc>(
       create: (context) => FileIOBloc(),
-      child: MaterialApp(
-        builder: (context, child) {
-          return Container(
-            decoration: const BoxDecoration(
-              color: Colors.transparent,
-            ),
-            child: Stack(
-              children: <Widget>[
-                child!,
-                const _TitleBar(),
-              ],
-            ),
-          );
-        },
-        debugShowCheckedModeBanner: false,
-        initialRoute: '/',
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        onGenerateRoute: _appRouter.onGenerateRoute,
-        supportedLocales: AppLocalizations.supportedLocales,
+      child: Material(
+        color: Colors.transparent,
+        child: MaterialApp(
+          builder: (context, child) {
+            return Container(
+              decoration: const BoxDecoration(
+                color: Colors.transparent,
+              ),
+              child: Stack(
+                children: <Widget>[
+                  child!,
+                  const _TitleBar(),
+                ],
+              ),
+            );
+          },
+          debugShowCheckedModeBanner: false,
+          initialRoute: '/',
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          onGenerateRoute: _appRouter.onGenerateRoute,
+          supportedLocales: AppLocalizations.supportedLocales,
+        ),
       ),
     );
   }
@@ -71,6 +74,7 @@ class _TitleBar extends StatelessWidget {
                   ),
                   SizedBox(width: 5),
                   Material(
+                    color: Colors.transparent,
                     child: Text(
                       'Flutter ARB Organizer',
                       style: TextStyle(
@@ -78,7 +82,6 @@ class _TitleBar extends StatelessWidget {
                         fontSize: 16,
                       ),
                     ),
-                    color: Colors.transparent,
                   ),
                   Expanded(child: SizedBox()),
                 ],

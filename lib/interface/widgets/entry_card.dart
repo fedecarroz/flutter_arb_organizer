@@ -138,50 +138,24 @@ class _NewEntryCardState extends State<NewEntryCard> {
 
   @override
   Widget build(BuildContext context) {
-    return MainCard(
-      width: 500,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          const CardHeader(
-            title: 'Aggiungi nuova entry',
-          ),
-          const SizedBox(height: 20),
-          Row(
-            children: <Widget>[
-              SizedBox(
-                width: 80,
-                child: Text(
-                  'Chiave:',
-                  style: TextStyle(
-                    color: Colors.blue[800],
-                    fontSize: 18,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: TextFormField(
-                  decoration: const InputDecoration(
-                    hintText: 'Inserire la chiave',
-                  ),
-                  onChanged: (text) {
-                    setState(() {
-                      key = text;
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          for (var language in widget.arbDoc.languages) ...[
+    return Center(
+      child: MainCard(
+        width: 500,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            CardHeader(
+              title: 'Aggiungi nuova entry',
+              onBack: () => Navigator.of(context).pop(),
+            ),
+            const SizedBox(height: 20),
             Row(
               children: <Widget>[
                 SizedBox(
                   width: 80,
                   child: Text(
-                    '$language:',
+                    'Chiave:',
                     style: TextStyle(
                       color: Colors.blue[800],
                       fontSize: 18,
@@ -191,53 +165,69 @@ class _NewEntryCardState extends State<NewEntryCard> {
                 Expanded(
                   child: TextFormField(
                     decoration: const InputDecoration(
-                      hintText: 'Inserire testo',
+                      hintText: 'Inserire la chiave',
                     ),
                     onChanged: (text) {
                       setState(() {
-                        values[language] = text;
+                        key = text;
                       });
                     },
                   ),
                 ),
               ],
             ),
-            language == widget.arbDoc.languages.last
-                ? const SizedBox()
-                : const SizedBox(height: 10),
-          ],
-
-          //TODO: Sezione scelta gruppo
-
-          const SizedBox(height: 30),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: SecondaryButton(
-                  label: 'Annulla',
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
+            const SizedBox(height: 10),
+            for (var language in widget.arbDoc.languages) ...[
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 80,
+                    child: Text(
+                      '$language:',
+                      style: TextStyle(
+                        color: Colors.blue[800],
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Inserire testo',
+                      ),
+                      onChanged: (text) {
+                        setState(() {
+                          values[language] = text;
+                        });
+                      },
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(width: 15),
-              Expanded(
-                child: PrimaryButton(
-                  label: 'Aggiungi',
-                  onPressed: () {
-                    final entry = ArbEntry(
-                      key: key,
-                      localizedValues: values,
-                      groupId: '', //TODO: gruppo
-                    );
-
-                    widget.onPressed?.call(entry);
-
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ),
+              language == widget.arbDoc.languages.last
+                  ? const SizedBox()
+                  : const SizedBox(height: 10),
             ],
-          ),
-        ],
+
+            //TODO: Sezione scelta gruppo
+
+            const SizedBox(height: 30),
+            PrimaryButton(
+              label: 'Aggiungi',
+              onPressed: () {
+                final entry = ArbEntry(
+                  key: key,
+                  localizedValues: values,
+                  groupId: '', //TODO: gruppo
+                );
+            
+                widget.onPressed?.call(entry);
+            
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        ),
       ),
     );
   }

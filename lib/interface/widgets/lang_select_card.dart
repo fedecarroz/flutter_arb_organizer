@@ -39,16 +39,13 @@ class LangSelectCard extends StatelessWidget {
           else
             const SizedBox(height: 15),
           for (final lang in languages) ...[
-            Material(
-              color: Colors.transparent,
-              child: InkWell(
-                onTap: () => onLanguageClick?.call(lang),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Text(
-                    lang,
-                    style: TextStyle(color: Colors.grey[600]),
-                  ),
+            InkWell(
+              onTap: () => onLanguageClick?.call(lang),
+              child: Padding(
+                padding: const EdgeInsets.all(15),
+                child: Text(
+                  lang,
+                  style: TextStyle(color: Colors.grey[600]),
                 ),
               ),
             ),

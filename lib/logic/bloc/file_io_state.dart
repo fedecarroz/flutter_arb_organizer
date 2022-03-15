@@ -28,6 +28,21 @@ class FileIOSaveInProgress extends FileIOState {
   List<Object> get props => [];
 }
 
+class FileIOExportComplete extends FileIOState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileIOExportInProgress extends FileIOState {
+  @override
+  List<Object> get props => [];
+}
+
+class FileIOExportFailure extends FileIOState {
+  @override
+  List<Object> get props => [];
+}
+
 class FileIOSaveComplete extends FileIOState {
   @override
   List<Object> get props => [];

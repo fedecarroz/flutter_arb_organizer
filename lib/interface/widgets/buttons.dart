@@ -51,7 +51,7 @@ class PrimaryButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         alignment: Alignment.center,
         elevation: 0,
-        minimumSize: const Size(160, 40),
+        minimumSize: const Size(160, 50),
         primary: Colors.blue[800],
         textStyle: TextStyle(
           color: Colors.white,
@@ -80,7 +80,7 @@ class SecondaryButton extends StatelessWidget {
       onPressed: onPressed,
       child: Center(child: Text(label)),
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size(0, 40),
+        minimumSize: const Size(0, 50),
         primary: Colors.blue[800],
         textStyle: TextStyle(
           color: Colors.white,

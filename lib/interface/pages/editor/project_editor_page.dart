@@ -1,22 +1,9 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/interface.dart';
-import 'package:flutter_arb_organizer/logic.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
-class ProjectEditorPage extends StatefulWidget {
+class ProjectEditorPage extends StatelessWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);
-
-  @override
-  State<ProjectEditorPage> createState() => ProjectEditorPageState();
-}
-
-class ProjectEditorPageState extends State<ProjectEditorPage> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<EditorMenuBloc>().add(AllEntriesMenuClicked());
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,8 +16,8 @@ class ProjectEditorPageState extends State<ProjectEditorPage> {
         },
         child: Flex(
           direction: Axis.horizontal,
-          children: const <Widget>[
-            Flexible(
+          children: <Widget>[
+            const Flexible(
               flex: 1,
               child: LeftSide(),
             ),

@@ -32,9 +32,6 @@ class AppRouter {
         return MaterialPageRoute(
           builder: (context) => MultiBlocProvider(
             providers: <BlocProvider>[
-              BlocProvider<EditorMenuBloc>(
-                create: (context) => EditorMenuBloc(arbDoc.projectName),
-              ),
               BlocProvider<ArbEditorBloc>(
                 create: (context) => ArbEditorBloc(arbDoc),
               ),

@@ -45,13 +45,13 @@ class FileIOBloc extends Bloc<FileIOEvent, FileIOState> {
     FileIOArbsSaved event,
     Emitter<FileIOState> emit,
   ) async {
-    emit(FileIOSaveInProgress());
+    emit(FileIOExportInProgress());
 
     await _ioRepo.saveArbs(event.document);
     try {
-      emit(FileIOSaveComplete());
+      emit(FileIOExportComplete());
     } catch (e) {
-      emit(FileIOSaveFailure());
+      emit(FileIOExportFailure());
     }
   }
 

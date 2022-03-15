@@ -79,17 +79,15 @@ Future<List<String>?> showLanguageSelectDialog(
                                     ),
                                   ),
                                 ),
-                                Material(
-                                  child: Checkbox(
-                                    value: languagesSelected.contains(lang),
-                                    onChanged: (checked) => setState(() {
-                                      if (checked == true) {
-                                        languagesSelected.add(lang);
-                                      } else {
-                                        languagesSelected.remove(lang);
-                                      }
-                                    }),
-                                  ),
+                                Checkbox(
+                                  value: languagesSelected.contains(lang),
+                                  onChanged: (checked) => setState(() {
+                                    if (checked == true) {
+                                      languagesSelected.add(lang);
+                                    } else {
+                                      languagesSelected.remove(lang);
+                                    }
+                                  }),
                                 )
                               ],
                             );
