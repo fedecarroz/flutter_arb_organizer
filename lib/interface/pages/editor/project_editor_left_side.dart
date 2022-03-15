@@ -12,23 +12,24 @@ class LeftSide extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Colors.blue[700],
-        width: double.maxFinite,
-        padding: EdgeInsets.only(
-          top: appWindow.titleBarHeight + 20,
-        ),
-        child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
-          builder: (context, state) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                _ProjectName(state.document.projectName),
-                const SizedBox(height: 20),
-                const Expanded(child: _LeftMainMenu()),
-              ],
-            );
-          },
-        ));
+      color: Colors.blue[700],
+      width: double.maxFinite,
+      padding: EdgeInsets.only(
+        top: appWindow.titleBarHeight + 20,
+      ),
+      child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
+        builder: (context, state) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              _ProjectName(state.document.projectName),
+              const SizedBox(height: 20),
+              const Expanded(child: _LeftMainMenu()),
+            ],
+          );
+        },
+      ),
+    );
   }
 }
 

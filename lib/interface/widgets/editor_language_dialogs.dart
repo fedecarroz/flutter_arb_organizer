@@ -218,7 +218,7 @@ class _LanguageRemoveDialog extends StatelessWidget {
             const SizedBox(height: 15),
             RichText(
               text: const TextSpan(
-                text: 'Sei sicuro di voler rimuovere la lingua selezionata?'
+                text: 'Sei sicuro di voler rimuovere la lingua selezionata? '
                     'Il processo è ',
                 style: TextStyle(
                   color: Colors.black,
@@ -239,19 +239,19 @@ class _LanguageRemoveDialog extends StatelessWidget {
               child: Row(
                 children: <Widget>[
                   Expanded(
+                    child: SecondaryButton(
+                      label: 'Annulla',
+                      onPressed: () => Navigator.pop(context),
+                    ),
+                  ),
+                  const SizedBox(width: 15),
+                  Expanded(
                     child: PrimaryButton(
                       label: 'Conferma',
                       onPressed: () {
                         editoBloc.add(ArbEditorLanguageRemoved(currentLang));
                         Navigator.pop(context);
                       },
-                    ),
-                  ),
-                  const SizedBox(width: 15),
-                  Expanded(
-                    child: SecondaryButton(
-                      label: 'Annulla',
-                      onPressed: () => Navigator.pop(context),
                     ),
                   ),
                 ],
