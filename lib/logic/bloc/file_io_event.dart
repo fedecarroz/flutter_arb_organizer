@@ -4,6 +4,11 @@ abstract class FileIOEvent extends Equatable {
   const FileIOEvent();
 }
 
+class FileIOResetted extends FileIOEvent {
+  @override
+  List<Object?> get props => [];
+}
+
 class FileIOLoadStarted extends FileIOEvent {
   @override
   List<Object?> get props => [];

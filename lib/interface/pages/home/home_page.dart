@@ -39,7 +39,7 @@ class _HomePageState extends State<HomePage> {
                 context,
                 projectEditorRoute,
                 arguments: state.arbDocument,
-              );
+              ).then((_) => resetHomeBlocs(context));
             }
           },
         ),
@@ -93,4 +93,11 @@ class _HomePageState extends State<HomePage> {
       }
     }
   }
+}
+
+void resetHomeBlocs(BuildContext context) {
+  context.read<ArbImportFormBloc>().add(ArbImportFormResetted());
+  context.read<ArbCreateFormBloc>().add(ArbCreateFormResetted());
+  context.read<FileIOBloc>().add(FileIOResetted());
+  context.read<HomeBloc>().add(HomeResetted());
 }

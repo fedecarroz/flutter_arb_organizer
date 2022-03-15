@@ -12,6 +12,7 @@ class FileIOBloc extends Bloc<FileIOEvent, FileIOState> {
   final _ioRepo = IORepository();
 
   FileIOBloc() : super(FileIOInitial()) {
+    on<FileIOResetted>((_, emit) => emit(FileIOInitial()));
     on<FileIOLoadStarted>(_manageFileLoad);
     on<FileIODropped>(_manageFileDrop);
     on<FileIOArbsSaved>(_manageArbsSave);

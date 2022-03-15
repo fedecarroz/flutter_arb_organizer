@@ -17,8 +17,6 @@ class _EditorToolbarState extends State<EditorToolbar> {
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, boxConstr) {
-        final maxSearchTextInputWidth = boxConstr.maxWidth - 70 * 6 - 30;
-
         return Container(
           color: Colors.blue[900],
           child: Row(
@@ -26,19 +24,17 @@ class _EditorToolbarState extends State<EditorToolbar> {
             children: <Widget>[
               _SearchBar(
                 showSearchInput: showSearchInput,
-                maxSearchTextInputWidth: maxSearchTextInputWidth,
-                onTextChange: (text) {
-                  context.read<SearchTextFilterCubit>().changeText(text);
-                },
+                onTextChange: (text) =>
+                    context.read<FilterCubit>().changeText(text),
               ),
               const _AddEntryButton(),
               const _FilterButton(),
-              _SearchButton(
-                onTap: () => setState(() => showSearchInput = !showSearchInput),
-              ),
               const _GroupsButton(),
               const _LanguagesButton(),
               const _SaveButton(),
+              _ExitButton(
+                onTap: () => Navigator.of(context).pop(),
+              ),
             ],
           ),
         );
@@ -49,43 +45,41 @@ class _EditorToolbarState extends State<EditorToolbar> {
 
 class _SearchBar extends StatelessWidget {
   final bool showSearchInput;
-  final double maxSearchTextInputWidth;
   final void Function(String text)? onTextChange;
 
   const _SearchBar({
     Key? key,
     required this.showSearchInput,
-    required this.maxSearchTextInputWidth,
     this.onTextChange,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 0),
-      margin: const EdgeInsets.all(15),
-      padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      width: showSearchInput ? maxSearchTextInputWidth : 0,
-      height: 40,
-      child: Row(
-        children: <Widget>[
-          const Icon(Icons.search, size: 20),
-          const SizedBox(width: 15),
-          Expanded(
-            child: TextFormField(
-              decoration: const InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.only(bottom: 10),
-                hintText: 'Cerca...',
+    return Expanded(
+      child: Container(
+        margin: const EdgeInsets.all(15),
+        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(100),
+        ),
+        height: 40,
+        child: Row(
+          children: <Widget>[
+            const Icon(Icons.search, size: 20),
+            const SizedBox(width: 15),
+            Expanded(
+              child: TextFormField(
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.only(bottom: 10),
+                  hintText: 'Cerca...',
+                ),
+                onChanged: onTextChange?.call,
               ),
-              onChanged: onTextChange?.call,
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -164,16 +158,21 @@ class _FilterButton extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () => showEditorFilterDialog(context),
+        onTap: () async {
+          final result = await showEditorFilterDialog(context);
+          if (result != null) {
+            context.read<FilterCubit>().changeFilters(result);
+          }
+        },
       ),
     );
   }
 }
 
-class _SearchButton extends StatelessWidget {
+class _ExitButton extends StatelessWidget {
   final void Function() onTap;
 
-  const _SearchButton({
+  const _ExitButton({
     Key? key,
     required this.onTap,
   }) : super(key: key);
@@ -189,12 +188,12 @@ class _SearchButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
             Icon(
-              Icons.search,
+              Icons.exit_to_app_outlined,
               color: Colors.white,
               size: 30,
             ),
             Text(
-              'Ricerca',
+              'Esci',
               style: TextStyle(
                 color: Colors.white,
               ),
@@ -233,9 +232,7 @@ class _GroupsButton extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () {
-          showEditorGroupListDialog(context);
-        },
+        onTap: () => showEditorGroupListDialog(context),
       ),
     );
   }
