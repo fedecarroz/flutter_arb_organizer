@@ -164,47 +164,7 @@ class _FilterButton extends StatelessWidget {
             ),
           ],
         ),
-        onTap: () {
-          showDialog(
-            context: context,
-            builder: (_) {
-              final state = context.watch<ArbEditorBloc>().state;
-              return Center(
-                child: MainCard(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      CardHeader(
-                        title: 'Filtra',
-                        onBack: () => Navigator.of(context).pop(),
-                      ),
-                      const SizedBox(height: 20),
-                      ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: state.document.groups.length,
-                        itemBuilder: (context, index) {
-                          return Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-                              Text(
-                                state.document.groups.values.elementAt(index),
-                              ),
-                              Checkbox(
-                                value: false,
-                                onChanged: (value) {},
-                              ),
-                            ],
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
-        },
+        onTap: () => showEditorFilterDialog(context),
       ),
     );
   }
