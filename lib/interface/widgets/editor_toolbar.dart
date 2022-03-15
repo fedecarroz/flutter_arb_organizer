@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/data.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditorToolbar extends StatefulWidget {
   const EditorToolbar({Key? key}) : super(key: key);
@@ -429,148 +427,8 @@ class _LanguagesButton extends StatelessWidget {
           ],
         ),
         onTap: () {
-
-        final editorBloc = context.read<ArbEditorBloc>();
-
-          showDialog(
-            context: context,
-            builder: (_) {
-          
-              final state = context.watch<ArbEditorBloc>().state;
-
-              return Center(
-                child: MainCard(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      CardHeader(
-                        title: 'Lingue Supportate',
-                        onBack: () => Navigator.of(context).pop(),
-                      ),
-                      const SizedBox(height: 10),
-                      state.document.languages.isEmpty
-                          ? Text(
-                              'Nessuna lingua supportata',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            )
-                          : ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: state.document.languages.length,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      state.document.languages.elementAt(index),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        IconButton(
-                                          onPressed: () {
-                                            showDialog(
-                                              context: context,
-                                              builder: (_) {
-                                                final languages = context
-                                                    .watch<ArbEditorBloc>()
-                                                    .state
-                                                    .document
-                                                    .languages;
-
-                                                final languagesAvailable =
-                                                    LanguagesSupported.values
-                                                        .where((l) => !languages
-                                                            .contains(l));
-
-                                                return Center(
-                                                  child: LangSelectCard(
-                                                    languages:
-                                                        languagesAvailable
-                                                            .toList(),
-                                                    onBackClick: () =>
-                                                        Navigator.of(context)
-                                                            .pop(),
-                                                    title: 'Cambia lingua',
-                                                    onLanguageClick: (lang) =>
-                                                        context
-                                                            .read<
-                                                                ArbEditorBloc>()
-                                                            .add(
-                                                              ArbEditorLanguageUpdated(
-                                                                oldLang: state
-                                                                    .document
-                                                                    .languages
-                                                                    .elementAt(
-                                                                        index),
-                                                                newLang: lang,
-                                                              ),
-                                                            ),
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                          icon: const Icon(Icons.edit),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(
-                                            Icons.delete_outline,
-                                          ),
-                                          padding:
-                                              const EdgeInsets.only(left: 0),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                      const SizedBox(height: 20),
-                      PrimaryButton(
-                        label: 'Nuova lingua',
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) {
-                              final languages = context
-                                  .watch<ArbEditorBloc>()
-                                  .state
-                                  .document
-                                  .languages;
-
-                              final languagesAvailable = LanguagesSupported
-                                  .values
-                                  .where((l) => !languages.contains(l));
-
-                              return Center(
-                                child: LangSelectCard(
-                                  languages: languagesAvailable.toList(),
-                                  onBackClick: () =>
-                                      Navigator.of(context).pop(),
-                                  title: 'Aggiungi lingua',
-                                  onLanguageClick: (lang) => context
-                                      .read<ArbEditorBloc>()
-                                      .add(ArbEditorLanguageAdded(lang)),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      )
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          final editorBloc = context.read<ArbEditorBloc>();
+          showEditorLanguageListDialog(context, editorBloc);
         },
       ),
     );
