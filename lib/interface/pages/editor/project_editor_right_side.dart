@@ -54,11 +54,16 @@ class RightSide extends StatelessWidget {
                 child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
                   builder: (context, state) {
                     final arbDoc = state.document;
+                    final searchText =
+                        context.watch<SearchTextFilterCubit>().state.text;
+                    final filteredLanguages = Map.of(arbDoc.labels)
+                      ..removeWhere((key, _) => !key.startsWith(searchText));
+
                     return GridView.builder(
                       controller: controller,
                       physics: const NeverScrollableScrollPhysics(),
                       padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: arbDoc.labels.length,
+                      itemCount: filteredLanguages.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         crossAxisSpacing: 20,
@@ -67,23 +72,21 @@ class RightSide extends StatelessWidget {
                       ),
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
+                        final entry = filteredLanguages.values.elementAt(index);
+
                         return EntryCard(
-                          arbDoc: state.document,
-                          index: index,
+                          entry: entry,
+                          languages: arbDoc.languages,
                           onChanged: (value, language) {
-                            var newLocalizedValues = arbDoc.labels.values
-                                .elementAt(index)
-                                .localizedValues;
+                            var newLocalizedValues = entry.localizedValues;
 
                             newLocalizedValues[language] = value;
 
                             context.read<ArbEditorBloc>().add(
                                   ArbEditorEntryUpdated(
-                                    arbDoc.labels.values
-                                        .elementAt(index)
-                                        .copyWith(
-                                          localizedValues: newLocalizedValues,
-                                        ),
+                                    entry.copyWith(
+                                      localizedValues: newLocalizedValues,
+                                    ),
                                   ),
                                 );
                           },
@@ -110,6 +113,8 @@ void _listenerIO(
     showDialog(
       context: context,
       builder: (_) {
+        Future.delayed(const Duration(seconds: 2))
+            .then((_) => Navigator.pop(context));
         return Center(
           child: MainCard(
             width: 200,
@@ -132,6 +137,9 @@ void _listenerIO(
     showDialog(
       context: context,
       builder: (_) {
+        Future.delayed(const Duration(seconds: 2))
+            .then((_) => Navigator.pop(context));
+
         return Center(
           child: MainCard(
             width: 250,

@@ -27,6 +27,9 @@ class _EditorToolbarState extends State<EditorToolbar> {
               _SearchBar(
                 showSearchInput: showSearchInput,
                 maxSearchTextInputWidth: maxSearchTextInputWidth,
+                onTextChange: (text) {
+                  context.read<SearchTextFilterCubit>().changeText(text);
+                },
               ),
               const _AddEntryButton(),
               const _FilterButton(),
@@ -47,11 +50,13 @@ class _EditorToolbarState extends State<EditorToolbar> {
 class _SearchBar extends StatelessWidget {
   final bool showSearchInput;
   final double maxSearchTextInputWidth;
+  final void Function(String text)? onTextChange;
 
   const _SearchBar({
     Key? key,
     required this.showSearchInput,
     required this.maxSearchTextInputWidth,
+    this.onTextChange,
   }) : super(key: key);
 
   @override
@@ -77,6 +82,7 @@ class _SearchBar extends StatelessWidget {
                 contentPadding: EdgeInsets.only(bottom: 10),
                 hintText: 'Cerca...',
               ),
+              onChanged: onTextChange?.call,
             ),
           ),
         ],
@@ -268,132 +274,7 @@ class _GroupsButton extends StatelessWidget {
           ],
         ),
         onTap: () {
-          showDialog(
-            context: context,
-            builder: (_) {
-              final state = context.watch<ArbEditorBloc>().state;
-              return Center(
-                child: MainCard(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      CardHeader(
-                        title: 'Gestione gruppi',
-                        onBack: () => Navigator.of(context).pop(),
-                      ),
-                      const SizedBox(height: 20),
-                      state.document.groups.isEmpty
-                          ? Text(
-                              'Nessun gruppo trovato',
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey[600],
-                              ),
-                            )
-                          : ListView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: state.document.groups.length,
-                              itemBuilder: (context, index) {
-                                return Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: <Widget>[
-                                    Text(
-                                      state.document.groups.values
-                                          .elementAt(index),
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                      ),
-                                    ),
-                                    Row(
-                                      children: <Widget>[
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon: const Icon(Icons.edit),
-                                        ),
-                                        IconButton(
-                                          onPressed: () {},
-                                          icon:
-                                              const Icon(Icons.delete_outline),
-                                          padding:
-                                              const EdgeInsets.only(left: 0),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                );
-                              },
-                            ),
-                      const SizedBox(height: 20),
-                      PrimaryButton(
-                        label: 'Nuovo gruppo',
-                        onPressed: () {
-                          showDialog(
-                            context: context,
-                            builder: (_) {
-                              final groupNameController =
-                                  TextEditingController();
-                              return Center(
-                                child: MainCard(
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: <Widget>[
-                                      CardHeader(
-                                        title: 'Aggiungi gruppo',
-                                        onBack: () {
-                                          groupNameController.clear();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      const SizedBox(height: 10),
-                                      Row(
-                                        children: <Widget>[
-                                          Text(
-                                            'Nome gruppo:',
-                                            style: TextStyle(
-                                              color: Colors.blue[800],
-                                              fontSize: 18,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Expanded(
-                                            child: TextFormField(
-                                              decoration: const InputDecoration(
-                                                hintText:
-                                                    'Inserisci il nome del gruppo',
-                                              ),
-                                              controller: groupNameController,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 20),
-                                      PrimaryButton(
-                                        label: 'Aggiungi gruppo',
-                                        onPressed: () {
-                                          context.read<ArbEditorBloc>().add(
-                                                ArbEditorGroupCreated(
-                                                  groupNameController.text,
-                                                ),
-                                              );
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          showEditorGroupListDialog(context);
         },
       ),
     );

@@ -4,14 +4,14 @@ import 'package:flutter_arb_organizer/interface/widgets/buttons.dart';
 import 'package:flutter_arb_organizer/interface/widgets/card.dart';
 
 class EntryCard extends StatelessWidget {
-  final ArbDocument arbDoc;
-  final int index;
+  final ArbEntry entry;
+  final Set<String> languages;
   final void Function(String text, String language) onChanged;
 
   const EntryCard({
     Key? key,
-    required this.arbDoc,
-    required this.index,
+    required this.entry,
+    required this.languages,
     required this.onChanged,
   }) : super(key: key);
 
@@ -31,7 +31,7 @@ class EntryCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Text(
-                arbDoc.labels.keys.elementAt(index),
+                entry.key,
                 style: TextStyle(
                   color: Colors.blue[800],
                   fontSize: 18,
@@ -82,7 +82,7 @@ class EntryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          for (var language in arbDoc.languages) ...[
+          for (var language in languages) ...[
             Row(
               children: <Widget>[
                 SizedBox(
@@ -100,15 +100,13 @@ class EntryCard extends StatelessWidget {
                     decoration: const InputDecoration(
                       hintText: 'Inserire testo',
                     ),
-                    initialValue: arbDoc.labels.values
-                        .elementAt(index)
-                        .localizedValues[language],
+                    initialValue: entry.localizedValues[language],
                     onChanged: (text) => onChanged.call(text, language),
                   ),
                 ),
               ],
             ),
-            language == arbDoc.languages.last
+            language == languages.last
                 ? const SizedBox()
                 : const SizedBox(height: 12),
           ],
@@ -220,9 +218,9 @@ class _NewEntryCardState extends State<NewEntryCard> {
                   localizedValues: values,
                   groupId: '', //TODO: gruppo
                 );
-            
+
                 widget.onPressed?.call(entry);
-            
+
                 Navigator.of(context).pop();
               },
             ),

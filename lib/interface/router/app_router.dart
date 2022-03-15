@@ -35,6 +35,9 @@ class AppRouter {
               BlocProvider<ArbEditorBloc>(
                 create: (context) => ArbEditorBloc(arbDoc),
               ),
+              BlocProvider<SearchTextFilterCubit>(
+                create: (context) => SearchTextFilterCubit(),
+              ),
             ],
             child: const ProjectEditorPage(),
           ),
