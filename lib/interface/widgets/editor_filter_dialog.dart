@@ -63,11 +63,19 @@ class _FilterDialogState extends State<_FilterDialog> {
                     onBack: () => Navigator.of(context).pop(),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => setState(() => groupIdSelected = {}),
-                  icon: const Icon(Icons.close),
-                  tooltip: "Resetta filtri",
-                )
+                Tooltip(
+                  message: 'Reset filtri',
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () => setState(() => groupIdSelected = {}),
+                      child: const Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Icon(Icons.close),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: 20),
