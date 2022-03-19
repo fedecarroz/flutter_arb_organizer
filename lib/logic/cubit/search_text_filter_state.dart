@@ -25,19 +25,19 @@ class FilterState extends Equatable {
   }
 
   Map<String, ArbEntry> filterLabels(Map<String, ArbEntry> input) {
-    final output = Map.of(input);
+    var output = Map.of(input).entries;
 
     if (text.isNotEmpty) {
-      output.removeWhere((key, _) => !key.startsWith(text));
+      output = output.where((entry) => entry.key.startsWith(text));
     }
 
     if (groupIdsSelected.isNotEmpty) {
-      output.removeWhere(
-        (_, entry) => !groupIdsSelected.contains(entry.groupId),
+      output = output.where(
+        (entry) => groupIdsSelected.contains(entry.value.groupId),
       );
     }
 
-    return output;
+    return Map.fromEntries([...output]);
   }
 
   @override
