@@ -43,6 +43,7 @@ class RightSide extends StatelessWidget {
                     (currentScrollOffset, maxScrollOffset) {
                   return const Duration(milliseconds: 2000);
                 },
+                spaceScrollAmount: 0,
               ),
               customMouseWheelScrollConfig: const CustomMouseWheelScrollConfig(
                 scrollAmountMultiplier: 20.0,
