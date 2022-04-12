@@ -1,10 +1,8 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/helper.dart';
 import 'package:flutter_arb_organizer/interface.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_improved_scrolling/flutter_improved_scrolling.dart';
 
 class RightSide extends StatelessWidget {
   final controller = ScrollController();
@@ -13,6 +11,10 @@ class RightSide extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final arbDoc = context.watch<ArbEditorBloc>().state.document;
+    final filterState = context.watch<FilterCubit>().state;
+    final filteredLabels = filterState.filterLabels(arbDoc.labels);
+
     return BlocListener<FileIOBloc, FileIOState>(
       listener: _listenerIO,
       child: Column(
@@ -25,77 +27,37 @@ class RightSide extends StatelessWidget {
           const EditorToolbar(),
           const SizedBox(height: 20),
           Expanded(
-            child: ImprovedScrolling(
-              scrollController: controller,
-              enableMMBScrolling: true,
-              enableKeyboardScrolling: true,
-              enableCustomMouseWheelScrolling: true,
-              mmbScrollConfig: const MMBScrollConfig(
-                customScrollCursor: DefaultCustomScrollCursor(),
+            child: GridView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: filteredLabels.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 20,
+                mainAxisExtent: 80 + (arbDoc.languages.length * 60),
+                mainAxisSpacing: 20,
               ),
-              keyboardScrollConfig: KeyboardScrollConfig(
-                arrowsScrollAmount: 250.0,
-                homeScrollDurationBuilder:
-                    (currentScrollOffset, minScrollOffset) {
-                  return const Duration(milliseconds: 100);
-                },
-                endScrollDurationBuilder:
-                    (currentScrollOffset, maxScrollOffset) {
-                  return const Duration(milliseconds: 2000);
-                },
-                spaceScrollAmount: 0,
-              ),
-              customMouseWheelScrollConfig: const CustomMouseWheelScrollConfig(
-                scrollAmountMultiplier: 20.0,
-                scrollDuration: Duration(milliseconds: 200),
-                scrollCurve: Curves.linear,
-              ),
-              child: ScrollConfiguration(
-                behavior: const CustomScrollBehaviour(),
-                child: BlocBuilder<ArbEditorBloc, ArbEditorState>(
-                  builder: (context, state) {
-                    final arbDoc = state.document;
-                    final filterState = context.watch<FilterCubit>().state;
-                    final filteredLabels =
-                        filterState.filterLabels(arbDoc.labels);
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                final entry = filteredLabels.values.elementAt(index);
 
-                    return GridView.builder(
-                      controller: controller,
-                      physics: const NeverScrollableScrollPhysics(),
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: filteredLabels.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 20,
-                        mainAxisExtent: 80 + (arbDoc.languages.length * 60),
-                        mainAxisSpacing: 20,
-                      ),
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final entry = filteredLabels.values.elementAt(index);
+                return EntryCard(
+                  entry: entry,
+                  arbDoc: arbDoc,
+                  onChanged: (value, language) {
+                    var newLocalizedValues = entry.localizedValues;
 
-                        return EntryCard(
-                          entry: entry,
-                          arbDoc: arbDoc,
-                          onChanged: (value, language) {
-                            var newLocalizedValues = entry.localizedValues;
+                    newLocalizedValues[language] = value;
 
-                            newLocalizedValues[language] = value;
-
-                            context.read<ArbEditorBloc>().add(
-                                  ArbEditorEntryUpdated(
-                                    entry.copyWith(
-                                      localizedValues: newLocalizedValues,
-                                    ),
-                                  ),
-                                );
-                          },
+                    context.read<ArbEditorBloc>().add(
+                          ArbEditorEntryUpdated(
+                            entry.copyWith(
+                              localizedValues: newLocalizedValues,
+                            ),
+                          ),
                         );
-                      },
-                    );
                   },
-                ),
-              ),
+                );
+              },
             ),
           ),
           const SizedBox(height: 20),

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/data.dart';
 import 'package:flutter_arb_organizer/interface/widgets.dart';
 
-class EntryCard extends StatelessWidget {
+class EntryCard extends StatefulWidget {
   final ArbDocument arbDoc;
   final ArbEntry entry;
   final void Function(String text, String language) onChanged;
@@ -13,6 +13,18 @@ class EntryCard extends StatelessWidget {
     required this.entry,
     required this.onChanged,
   }) : super(key: key);
+
+  @override
+  State<EntryCard> createState() => _EntryCardState();
+}
+
+class _EntryCardState extends State<EntryCard> {
+  final Map<String, TextEditingController> controllers = {};
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +44,7 @@ class EntryCard extends StatelessWidget {
               Row(
                 children: <Widget>[
                   Text(
-                    entry.key,
+                    widget.entry.key,
                     style: TextStyle(
                       color: Colors.blue[800],
                       fontSize: 18,
@@ -42,7 +54,7 @@ class EntryCard extends StatelessWidget {
                   const SizedBox(width: 10),
                   Container(
                     decoration: BoxDecoration(
-                      color: arbDoc.groups[entry.groupId] == null
+                      color: widget.arbDoc.groups[widget.entry.groupId] == null
                           ? Colors.grey
                           : Colors.blue[800],
                       borderRadius: BorderRadius.circular(6),
@@ -53,7 +65,8 @@ class EntryCard extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        arbDoc.groups[entry.groupId] ?? 'Nessun gruppo',
+                        widget.arbDoc.groups[widget.entry.groupId] ??
+                            'Nessun gruppo',
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 16,
@@ -76,7 +89,7 @@ class EntryCard extends StatelessWidget {
                           ],
                         ),
                         onTap: () => Future(
-                          () => showRenameDialog(context, entry),
+                          () => showRenameDialog(context, widget.entry),
                         ),
                       ),
                       PopupMenuItem(
@@ -88,7 +101,7 @@ class EntryCard extends StatelessWidget {
                           ],
                         ),
                         onTap: () => Future(
-                          () => showSetGroupDialog(context, entry),
+                          () => showSetGroupDialog(context, widget.entry),
                         ),
                       ),
                       PopupMenuItem(
@@ -100,7 +113,7 @@ class EntryCard extends StatelessWidget {
                           ],
                         ),
                         onTap: () => Future(
-                          () => showDeleteEntryDialog(context, entry),
+                          () => showDeleteEntryDialog(context, widget.entry),
                         ),
                       ),
                     ];
@@ -116,31 +129,46 @@ class EntryCard extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          for (var language in arbDoc.languages) ...[
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  width: 70,
-                  child: Text(
-                    '$language:',
-                    style: TextStyle(
-                      color: Colors.blue[800],
-                      fontSize: 18,
-                    ),
+          for (var language in widget.arbDoc.languages) ...[
+            Builder(builder: (context) {
+              final controller = TextEditingController.fromValue(
+                TextEditingValue(
+                  text: widget.entry.localizedValues[language] ?? '',
+                  selection: TextSelection.collapsed(
+                    offset:
+                        controllers[language]?.value.selection.baseOffset ?? -1,
                   ),
                 ),
-                Expanded(
-                  child: TextFormField(
-                    decoration: const InputDecoration(
-                      hintText: 'Inserire testo',
+              );
+
+              controllers[language] = controller;
+
+              return Row(
+                children: <Widget>[
+                  SizedBox(
+                    width: 70,
+                    child: Text(
+                      '$language:',
+                      style: TextStyle(
+                        color: Colors.blue[800],
+                        fontSize: 18,
+                      ),
                     ),
-                    initialValue: entry.localizedValues[language],
-                    onChanged: (text) => onChanged.call(text, language),
                   ),
-                ),
-              ],
-            ),
-            language == arbDoc.languages.last
+                  Expanded(
+                    child: TextFormField(
+                      decoration: const InputDecoration(
+                        hintText: 'Inserire testo',
+                      ),
+                      controller: controllers[language]!,
+                      onChanged: (text) =>
+                          widget.onChanged.call(text, language),
+                    ),
+                  ),
+                ],
+              );
+            }),
+            language == widget.arbDoc.languages.last
                 ? const SizedBox()
                 : const SizedBox(height: 12),
           ],
@@ -226,14 +254,14 @@ class _NewEntryCardState extends State<NewEntryCard> {
                   child: DropdownButton<String>(
                     items: [
                       DropdownMenuItem(
-                          child: const Text('Nessun gruppo'),
-                          value: '',
-                          onTap: () {
-                            setState(() {
-                              dropdownValue = '';
-                            });
-                          },
-                        ),
+                        child: const Text('Nessun gruppo'),
+                        value: '',
+                        onTap: () {
+                          setState(() {
+                            dropdownValue = '';
+                          });
+                        },
+                      ),
                       ...widget.arbDoc.groups.entries.map(
                         (e) => DropdownMenuItem(
                           child: Text(e.value),
