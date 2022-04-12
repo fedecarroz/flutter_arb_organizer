@@ -40,45 +40,47 @@ class _GroupListDialog extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                   )
-                : ListView.builder(
-                    physics: const NeverScrollableScrollPhysics(),
-                    shrinkWrap: true,
-                    itemCount: state.document.groups.length,
-                    itemBuilder: (context, index) {
-                      final group =
-                          state.document.groups.entries.elementAt(index);
+                : SizedBox(
+                    height: 300,
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.document.groups.length,
+                      itemBuilder: (context, index) {
+                        final group =
+                            state.document.groups.entries.elementAt(index);
 
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Text(
-                            group.value,
-                            style: const TextStyle(
-                              fontSize: 16,
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Text(
+                              group.value,
+                              style: const TextStyle(
+                                fontSize: 16,
+                              ),
                             ),
-                          ),
-                          Row(
-                            children: <Widget>[
-                              IconButton(
-                                onPressed: () => showEditorGroupEditDialog(
-                                  context,
-                                  group,
+                            Row(
+                              children: <Widget>[
+                                IconButton(
+                                  onPressed: () => showEditorGroupEditDialog(
+                                    context,
+                                    group,
+                                  ),
+                                  icon: const Icon(Icons.edit),
                                 ),
-                                icon: const Icon(Icons.edit),
-                              ),
-                              IconButton(
-                                onPressed: () => _showEditorGroupRemoveDialog(
-                                  context,
-                                  group.key,
+                                IconButton(
+                                  onPressed: () => _showEditorGroupRemoveDialog(
+                                    context,
+                                    group.key,
+                                  ),
+                                  icon: const Icon(Icons.delete_outline),
+                                  padding: const EdgeInsets.only(left: 0),
                                 ),
-                                icon: const Icon(Icons.delete_outline),
-                                padding: const EdgeInsets.only(left: 0),
-                              ),
-                            ],
-                          ),
-                        ],
-                      );
-                    },
+                              ],
+                            ),
+                          ],
+                        );
+                      },
+                    ),
                   ),
             const SizedBox(height: 20),
             PrimaryButton(

@@ -79,30 +79,31 @@ class _FilterDialogState extends State<_FilterDialog> {
               ],
             ),
             const SizedBox(height: 20),
-            ListView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: groups.length,
-              itemBuilder: (context, index) {
-                final groupEntry = groups.entries.elementAt(index);
+            SizedBox(
+              height: 300,
+              child: ListView.builder(
+                itemCount: groups.length,
+                itemBuilder: (context, index) {
+                  final groupEntry = groups.entries.elementAt(index);
 
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(groupEntry.value),
-                    Checkbox(
-                      value: groupIdSelected.contains(groupEntry.key),
-                      onChanged: (checked) => setState(() {
-                        if (checked == true) {
-                          groupIdSelected.add(groupEntry.key);
-                        } else {
-                          groupIdSelected.remove(groupEntry.key);
-                        }
-                      }),
-                    ),
-                  ],
-                );
-              },
+                  return Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      Text(groupEntry.value),
+                      Checkbox(
+                        value: groupIdSelected.contains(groupEntry.key),
+                        onChanged: (checked) => setState(() {
+                          if (checked == true) {
+                            groupIdSelected.add(groupEntry.key);
+                          } else {
+                            groupIdSelected.remove(groupEntry.key);
+                          }
+                        }),
+                      ),
+                    ],
+                  );
+                },
+              ),
             ),
             const SizedBox(height: 15),
             PrimaryButton(
