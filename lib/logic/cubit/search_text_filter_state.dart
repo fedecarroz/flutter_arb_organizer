@@ -37,6 +37,8 @@ class FilterState extends Equatable {
       );
     }
 
+    output = output.toList()..sort((p, n) => p.key.compareTo(n.key));
+
     return Map.fromEntries([...output]);
   }
 
