@@ -25,10 +25,9 @@ class RightSide extends StatelessWidget {
             alignment: Alignment.topCenter,
           ),
           const EditorToolbar(),
-          const SizedBox(height: 20),
           Expanded(
             child: GridView.builder(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.all(20),
               itemCount: filteredLabels.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
@@ -60,7 +59,6 @@ class RightSide extends StatelessWidget {
               },
             ),
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
