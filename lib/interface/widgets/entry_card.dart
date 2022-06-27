@@ -254,23 +254,23 @@ class _NewEntryCardState extends State<NewEntryCard> {
                   child: DropdownButton<String>(
                     items: [
                       DropdownMenuItem(
-                        child: const Text('Nessun gruppo'),
                         value: '',
                         onTap: () {
                           setState(() {
                             dropdownValue = '';
                           });
                         },
+                        child: const Text('Nessun gruppo'),
                       ),
                       ...widget.arbDoc.groups.entries.map(
                         (e) => DropdownMenuItem(
-                          child: Text(e.value),
                           value: e.key,
                           onTap: () {
                             setState(() {
                               dropdownValue = e.key;
                             });
                           },
+                          child: Text(e.value),
                         ),
                       ),
                     ],

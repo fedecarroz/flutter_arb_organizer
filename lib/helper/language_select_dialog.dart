@@ -4,17 +4,15 @@ import 'package:flutter_arb_organizer/interface.dart';
 Future<String?> showSingleLanguageSelectDialog(
   BuildContext context,
   List<String> languages, {
-  String? dialogTitle,
+  String dialogTitle = 'Scegli la lingua principale',
 }) async {
-  final _dialogTitle = dialogTitle ?? 'Scegli la lingua principale';
-
   return showDialog<String?>(
     context: context,
     builder: (context) {
       return Center(
         child: LangSelectCard(
           languages: languages,
-          title: _dialogTitle,
+          title: dialogTitle,
           onBackClick: () => Navigator.pop(context),
           onLanguageClick: (lang) => Navigator.pop(context, lang),
         ),

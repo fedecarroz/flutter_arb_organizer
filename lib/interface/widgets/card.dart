@@ -53,8 +53,8 @@ class CardHeader extends StatelessWidget {
           MouseRegion(
             cursor: SystemMouseCursors.click,
             child: GestureDetector(
-              child: const Icon(Icons.arrow_back_rounded),
               onTap: onBack?.call,
+              child: const Icon(Icons.arrow_back_rounded),
             ),
           ),
           const SizedBox(width: 10),

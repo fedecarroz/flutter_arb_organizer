@@ -159,9 +159,10 @@ class _FilterButton extends StatelessWidget {
           ],
         ),
         onTap: () async {
+          final filterCubit = context.read<FilterCubit>();
           final result = await showEditorFilterDialog(context);
           if (result != null) {
-            context.read<FilterCubit>().changeFilters(result);
+            filterCubit.changeFilters(result);
           }
         },
       ),
@@ -184,6 +185,7 @@ class _ExitButton extends StatelessWidget {
       child: EditorButton.widget(
         centerText: true,
         specialColor: true,
+        onTap: onTap,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: const <Widget>[
@@ -200,7 +202,6 @@ class _ExitButton extends StatelessWidget {
             ),
           ],
         ),
-        onTap: onTap,
       ),
     );
   }

@@ -47,7 +47,6 @@ class PrimaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Center(child: Text(label)),
       style: ElevatedButton.styleFrom(
         alignment: Alignment.center,
         elevation: 0,
@@ -58,6 +57,7 @@ class PrimaryButton extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
+      child: Center(child: Text(label)),
     );
   }
 }
@@ -78,7 +78,6 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return OutlinedButton(
       onPressed: onPressed,
-      child: Center(child: Text(label)),
       style: OutlinedButton.styleFrom(
         minimumSize: const Size(0, 50),
         primary: Colors.blue[800],
@@ -87,6 +86,7 @@ class SecondaryButton extends StatelessWidget {
           fontSize: fontSize,
         ),
       ),
+      child: Center(child: Text(label)),
     );
   }
 }

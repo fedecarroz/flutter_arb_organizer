@@ -23,8 +23,7 @@ class CustomScrollBehaviour extends MaterialScrollBehavior {
           thumbVisibility: true,
           radius: Radius.zero,
           thickness: 16.0,
-          hoverThickness: 16.0,
-          showTrackOnHover: true,
+          trackVisibility: true,
           child: child,
         );
       case TargetPlatform.android:

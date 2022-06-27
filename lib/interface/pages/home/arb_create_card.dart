@@ -73,6 +73,8 @@ class _ArbCreateCard extends StatelessWidget {
                 ),
                 SecondaryButton(
                   onPressed: () async {
+                    final createFormBloc = context.read<ArbCreateFormBloc>();
+
                     final newLanguages = await showLanguageSelectDialog(
                       context,
                       LanguagesSupported.values,
@@ -81,8 +83,7 @@ class _ArbCreateCard extends StatelessWidget {
                     );
 
                     if (newLanguages != null) {
-                      context
-                          .read<ArbCreateFormBloc>()
+                      createFormBloc
                           .add(ArbCreateFormLanguagesAdded(newLanguages));
                     }
                   },
@@ -231,14 +232,13 @@ class _ArbCreateCard extends StatelessWidget {
   }
 
   void _changeMainLang(BuildContext context) async {
-    final languages = context.read<ArbCreateFormBloc>().state.languages;
+    final createFormBloc = context.read<ArbCreateFormBloc>();
+    final languages = createFormBloc.state.languages;
     final newMainLang =
         await showSingleLanguageSelectDialog(context, languages);
 
     if (newMainLang != null) {
-      context
-          .read<ArbCreateFormBloc>()
-          .add(ArbCreateFormMainLangUpdated(newMainLang));
+      createFormBloc.add(ArbCreateFormMainLangUpdated(newMainLang));
     }
   }
 }

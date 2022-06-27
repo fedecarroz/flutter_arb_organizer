@@ -193,21 +193,21 @@ class _ArbImportCard extends StatelessWidget {
   }
 
   void _changeMainLang(BuildContext context) async {
-    final arbLangs = context.read<ArbImportFormBloc>().state.languages;
+    final importFormBloc = context.read<ArbImportFormBloc>();
+    final arbLangs = importFormBloc.state.languages;
     final languages = arbLangs.map((l) => l.lang).toList();
 
     final newMainLang =
         await showSingleLanguageSelectDialog(context, languages);
 
     if (newMainLang != null) {
-      context
-          .read<ArbImportFormBloc>()
-          .add(ArbImportFormMainLangUpdated(newMainLang));
+      importFormBloc.add(ArbImportFormMainLangUpdated(newMainLang));
     }
   }
 
   void _changeSingleLang(BuildContext context, String currentLang) async {
-    final arbLangs = context.read<ArbImportFormBloc>().state.languages;
+    final importFormBloc = context.read<ArbImportFormBloc>();
+    final arbLangs = importFormBloc.state.languages;
     final languages = arbLangs.map((l) => l.lang).toList();
 
     final langsAvailable = LanguagesSupported.values
@@ -221,9 +221,7 @@ class _ArbImportCard extends StatelessWidget {
     );
 
     if (newLang != null) {
-      context
-          .read<ArbImportFormBloc>()
-          .add(ArbImportFormLangUpdated(currentLang, newLang));
+      importFormBloc.add(ArbImportFormLangUpdated(currentLang, newLang));
     }
   }
 }

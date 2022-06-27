@@ -49,24 +49,24 @@ class ArbEditorBloc extends Bloc<ArbEditorEvent, ArbEditorState> {
   ) {
     emit(ArbEditorDocumentUpdateInProgress(state.document));
 
-    final _keys = state.document.labels.keys.toList();
-    final _values = state.document.labels.values.toList();
+    final keys = state.document.labels.keys.toList();
+    final values = state.document.labels.values.toList();
 
-    final index = _keys.indexOf(event.arbEntry.key);
+    final index = keys.indexOf(event.arbEntry.key);
 
-    if (_keys.contains(event.arbEntry.key)) {
+    if (keys.contains(event.arbEntry.key)) {
       if (event.newKey != null) {
-        if (!_keys.contains(event.newKey)) {
-          _keys[index] = event.newKey!;
-          _values[index] = event.arbEntry.copyWith(key: event.newKey);
+        if (!keys.contains(event.newKey)) {
+          keys[index] = event.newKey!;
+          values[index] = event.arbEntry.copyWith(key: event.newKey);
         } else {
           return emit(ArbEditorDocumentUpdateFailure(state.document));
         }
       } else {
-        _values[index] = event.arbEntry;
+        values[index] = event.arbEntry;
       }
 
-      final labels = Map.fromIterables(_keys, _values);
+      final labels = Map.fromIterables(keys, values);
 
       emit(
         ArbEditorDocumentUpdateSuccess(
@@ -109,18 +109,18 @@ class ArbEditorBloc extends Bloc<ArbEditorEvent, ArbEditorState> {
   ) {
     emit(ArbEditorDocumentUpdateInProgress(state.document));
 
-    final _keys = state.document.groups.keys.toSet();
-    final _values = state.document.groups.values.toList();
+    final keys = state.document.groups.keys.toSet();
+    final values = state.document.groups.values.toList();
 
     String groupId;
     do {
       groupId = UniqueKey().toString();
-    } while (_keys.contains(groupId));
+    } while (keys.contains(groupId));
 
-    _keys.add(groupId);
-    _values.add(event.groupName);
+    keys.add(groupId);
+    values.add(event.groupName);
 
-    final groups = Map.fromIterables(_keys, _values);
+    final groups = Map.fromIterables(keys, values);
 
     emit(
       ArbEditorDocumentUpdateSuccess(

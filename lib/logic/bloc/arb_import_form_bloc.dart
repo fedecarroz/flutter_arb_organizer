@@ -46,7 +46,7 @@ class ArbImportFormBloc extends Bloc<ArbImportFormEvent, ArbImportFormState> {
 
     final currentLangs = state.languages.map((langDoc) {
       final langDocToImportIndex =
-          langDocsToAdd.indexWhere((_l) => _l.lang == langDoc.lang);
+          langDocsToAdd.indexWhere((l) => l.lang == langDoc.lang);
 
       if (langDocToImportIndex != -1) {
         final langRemovedFromNew = langDocsToAdd.removeAt(langDocToImportIndex);
