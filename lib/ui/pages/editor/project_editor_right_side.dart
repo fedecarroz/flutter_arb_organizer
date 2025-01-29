@@ -1,6 +1,6 @@
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/interface.dart';
+import 'package:flutter_arb_organizer/ui.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -113,5 +113,37 @@ void _listenerIO(
         );
       },
     );
+  }
+}
+
+class _CustomScrollBehaviour extends MaterialScrollBehavior {
+  const _CustomScrollBehaviour();
+
+  @override
+  Widget buildScrollbar(
+    BuildContext context,
+    Widget child,
+    ScrollableDetails details,
+  ) {
+    switch (getPlatform(context)) {
+      case TargetPlatform.linux:
+      case TargetPlatform.macOS:
+        return Scrollbar(
+          controller: details.controller,
+          thumbVisibility: true,
+          child: child,
+        );
+      case TargetPlatform.windows:
+        return Scrollbar(
+          controller: details.controller,
+          thumbVisibility: true,
+          radius: Radius.zero,
+          thickness: 16.0,
+          trackVisibility: true,
+          child: child,
+        );
+      default:
+        return child;
+    }
   }
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/interface.dart';
+import 'package:flutter_arb_organizer/ui.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 

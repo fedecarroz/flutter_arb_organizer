@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/interface.dart';
+import 'package:flutter_arb_organizer/ui.dart';
 
 Future<String?> showSingleLanguageSelectDialog(
   BuildContext context,

@@ -5,10 +5,8 @@ import 'package:flutter_arb_organizer/app.dart';
 import 'package:flutter_arb_organizer/logic.dart';
 
 void main() {
-  BlocOverrides.runZoned(
-    () => runApp(const App()),
-    blocObserver: DebugBloc(),
-  );
+  Bloc.observer = DebugBloc();
+  runApp(const App());
 
   doWhenWindowReady(() {
     appWindow.title = 'Flutter ARB Organizer';

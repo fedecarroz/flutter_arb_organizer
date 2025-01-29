@@ -10,7 +10,7 @@ class WindowArbIOApi extends IOApiInterface {
   Future<List<File>> readFilesFromPicker({
     List<String>? extensionsAllowed,
   }) async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
+    final result = await FilePicker.platform.pickFiles(
       dialogTitle: 'Seleziona file',
       lockParentWindow: true,
       allowMultiple: true,
@@ -19,11 +19,7 @@ class WindowArbIOApi extends IOApiInterface {
           extensionsAllowed ?? [FilesSupported.arbdoc, FilesSupported.arb],
     );
 
-    if (result != null) {
-      return result.files.map((f) => File(f.path!)).toList();
-    } else {
-      return [];
-    }
+    return result?.files.map((f) => File(f.path!)).toList() ?? [];
   }
 
   @override
@@ -72,7 +68,7 @@ class WindowArbIOApi extends IOApiInterface {
       final filename = file.key;
       final fileContent = file.value;
 
-      zipEncoder.addFile(
+      zipEncoder.add(
         ArchiveFile(filename, fileContent.length, fileContent),
       );
     }

@@ -1,6 +1,6 @@
 import 'package:desktop_drop/desktop_drop.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_arb_organizer/interface.dart';
+import 'package:flutter_arb_organizer/ui.dart';
 
 class ProjectEditorPage extends StatelessWidget {
   const ProjectEditorPage({Key? key}) : super(key: key);

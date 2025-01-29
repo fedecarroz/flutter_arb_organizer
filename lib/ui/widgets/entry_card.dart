@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_arb_organizer/data.dart';
-import 'package:flutter_arb_organizer/interface/widgets.dart';
+import 'package:flutter_arb_organizer/ui/widgets.dart';
 
 class EntryCard extends StatefulWidget {
   final ArbDocument arbDoc;

@@ -49,9 +49,10 @@ class PrimaryButton extends StatelessWidget {
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         alignment: Alignment.center,
+        backgroundColor: Colors.blue[800],
         elevation: 0,
         minimumSize: const Size(160, 50),
-        primary: Colors.blue[800],
+        foregroundColor: Colors.white,
         textStyle: TextStyle(
           color: Colors.white,
           fontSize: fontSize,
@@ -79,8 +80,7 @@ class SecondaryButton extends StatelessWidget {
     return OutlinedButton(
       onPressed: onPressed,
       style: OutlinedButton.styleFrom(
-        minimumSize: const Size(0, 50),
-        primary: Colors.blue[800],
+        foregroundColor: Colors.blue[800], minimumSize: const Size(0, 50),
         textStyle: TextStyle(
           color: Colors.white,
           fontSize: fontSize,

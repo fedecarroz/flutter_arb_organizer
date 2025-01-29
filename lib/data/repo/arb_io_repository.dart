@@ -99,7 +99,7 @@ class IORepository {
       final arbBytes = Uint8List.fromList(arbDocContent);
 
       final filename = document.projectName.toLowerCase().replaceAll(' ', '_');
-      _ioApi.saveArbDocument('$filename.arbdoc', arbBytes);
+      _ioApi.saveArbDocument(filename, arbBytes);
 
       return true;
     } on Exception {

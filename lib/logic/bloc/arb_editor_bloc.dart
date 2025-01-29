@@ -27,7 +27,7 @@ class ArbEditorBloc extends Bloc<ArbEditorEvent, ArbEditorState> {
   ) {
     emit(ArbEditorDocumentUpdateInProgress(state.document));
 
-    final labels = state.document.labels;
+    final labels = Map<String, ArbEntry>.from(state.document.labels);
 
     if (labels.containsKey(event.arbEntry.key)) {
       emit(ArbEditorDocumentUpdateFailure(state.document));

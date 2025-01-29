@@ -10,14 +10,14 @@ class FlutterArbLogo extends StatelessWidget {
       children: <Widget>[
         Icon(
           Icons.text_fields,
-          color: Colors.blue[100]!.withOpacity(0.3),
+          color: Colors.blue[100]!.withValues(alpha: 0.3),
           size: 250,
         ),
         const SizedBox(width: 30),
         Text(
           'Flutter ARB Organizer',
           style: TextStyle(
-            color: Colors.blue[100]!.withOpacity(0.3),
+            color: Colors.blue[100]!.withValues(alpha: 0.3),
             fontSize: 50,
           ),
         ),
